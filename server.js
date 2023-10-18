@@ -87,6 +87,7 @@ app.post('/api/login', async (req, res, next) => {
 app.post('/api/searchcards', async (req, res, next) => {
     // incoming: userId, search
     // outgoing: results[], error
+
     var error = '';
     const { userId, search } = req.body;
     var _search = search.trim();
