@@ -20,7 +20,8 @@ app.use((req, res, next) => {
 app.listen(5000); // start Node + Express server on port 5000
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://brinkad1:munkelwitz@cluster0.claj68m.mongodb.net/';
+//const url = 'mongodb+srv://brinkad1:munkelwitz@cluster0.claj68m.mongodb.net/';
+const url = 'mongodb+srv://COP4331:%40COP4331bestgroup@cluster0.3oshecf.mongodb.net/';
 const client = new MongoClient(url);
 client.connect();
 
@@ -69,7 +70,7 @@ app.post('/api/login', async (req, res, next) => {
     const { login, password } = req.body;
     const db = client.db("db");
     const results = await
-        db.collection('Users').find({ Login: login, Password: password }).toArray();
+        db.collection('Users').find({ email: login, password: password }).toArray();
     var id = -1;
     var fn = '';
     var ln = '';
