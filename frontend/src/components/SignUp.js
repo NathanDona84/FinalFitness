@@ -50,24 +50,28 @@ function SignUpForm() {
             <form onSubmit={doSignUp}>
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
+                <label>First Name</label>
                 <input
                     type="text"
                     name="fname"
                     ref={(c) => firstName = c}
                     placeholder="First Name"
                 />
+                <label>Last Name</label>
                 <input
                     type="text"
                     name="lname"
                     ref={(c) => lastName = c}
                     placeholder="Last Name"
                 />
+                <label>Email:</label>
                 <input
                     type="email"
                     name="email"
                     ref={(c) => email = c}
                     placeholder="Email"
                 />
+                <label>Password</label>
                 <input
                     type="password"
                     name="password"

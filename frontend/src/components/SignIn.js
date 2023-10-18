@@ -23,7 +23,7 @@ function SignInForm() {
                     }
                 });
             var res = JSON.parse(await response.text());
-            console.log(`result is ${res}`);
+            console.log(`result is ${res.id}`);
             if (res.id <= 0) {
                 setMessage('User/Password combination incorrect');
             }
@@ -47,6 +47,7 @@ function SignInForm() {
             <form onSubmit={doLogin}>
                 <h1>Sign in</h1>
                 <span>or use your account</span>
+                <label>Username</label>
                 <input
                     type="text"
                     placeholder="Email"
@@ -54,7 +55,9 @@ function SignInForm() {
                     id="loginName"
                     ref={(c) => loginName = c}
                 />
+                <label>Password</label>
                 <input
+                    id="password"
                     type="password"
                     name="password"
                     d="loginPassword" 
@@ -63,7 +66,9 @@ function SignInForm() {
                 />
                 <a href="#">Forgot your password?</a>
                 <button onClick={doLogin}>Sign In</button>
+                <span id="loginResult">{message}</span>
             </form>
+            
         </div>
     );
 }

@@ -5,6 +5,7 @@ import SignUpForm from "../components/SignUp"
 
 export default function App() {
   const [type, setType] = useState("signIn");
+  const [message, setMessage] = useState('');
   const handleOnClick = text => {
     if (text !== type) {
       setType(text);
