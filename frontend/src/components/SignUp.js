@@ -12,14 +12,14 @@ function SignUpForm() {
         event.preventDefault();
         console.log("inside doSignUp")
         var obj = {
-            Login: email.value, Password: password.value, FirstName: firstName.value,
-            LastName: lastName.value, UserId: Date.now()
+            email: email.value, password: password.value, firstName: firstName.value,
+            lastName: lastName.value
         };
         console.log(`login: ${obj.Login} password: ${obj.Password} userID: ${obj.UserId}`);
         var js = JSON.stringify(obj);
         console.log(`JS: ${js}`);
         try {
-            const response = await fetch('http://localhost:5000/api/signup',
+            const response = await fetch('http://localhost:5000/api/register',
                 {
                     method: 'POST', body: js, headers: {
                         'Content-Type':

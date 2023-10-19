@@ -1,7 +1,7 @@
 import React from "react";
 function SignInForm() {
-    var loginName;
-    var loginPassword;
+    var email;
+    var password;
     const [message, setMessage] = React.useState('');
     const [state, setState] = React.useState({
         email: "",
@@ -11,8 +11,8 @@ function SignInForm() {
     const doLogin = async event => {
         event.preventDefault();
         console.log("inside dologin")
-        var obj = { login: loginName.value, password: loginPassword.value };
-        console.log("obj is " + obj.login + obj.password);
+        var obj = { email: email.value, password: password.value };
+        console.log("obj passed: " + obj.email + obj.password);
         var js = JSON.stringify(obj);
         try {
             const response = await fetch('http://localhost:5000/api/login',
@@ -52,17 +52,17 @@ function SignInForm() {
                     type="text"
                     placeholder="Email"
                     name="email"
-                    id="loginName"
-                    ref={(c) => loginName = c}
+                    id="email"
+                    ref={(c) => email = c}
                 />
                 <label>Password</label>
                 <input
                     id="password"
                     type="password"
                     name="password"
-                    d="loginPassword" 
+                    d="password" 
                     placeholder="Password"
-                    ref={(c) => loginPassword = c}
+                    ref={(c) => password = c}
                 />
                 <a href="#">Forgot your password?</a>
                 <button onClick={doLogin}>Sign In</button>
