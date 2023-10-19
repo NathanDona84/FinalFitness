@@ -30,7 +30,7 @@ app.post('/api/login', async (req, res, next) => {
     const { email, password } = req.body;
     try{
         const db = client.db("FinalFitness");
-        const results = await db.collection('users').find({ email: email, password: password }).toArray();
+        var results = await db.collection('users').find({ email: email, password: password }).toArray();
     }
     catch(e) {
         error = e.toString();
