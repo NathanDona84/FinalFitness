@@ -38,9 +38,10 @@ app.post('/api/login', async (req, res, next) => {
     // outgoing: id, firstName, lastName, error
     let error = '';
     const { email, password } = req.body;
+    let results = [];
     try{
         const db = client.db("FinalFitness");
-        const results = await db.collection('users').find({ email: email, password: password }).toArray();
+        results = await db.collection('users').find({ email: email, password: password }).toArray();
     }
     catch(e) {
         error = e.toString();
@@ -76,7 +77,7 @@ app.post('/api/register', async (req, res, next) => {
             let id = await db.collection('users').find().sort({"id": -1}).limit(1).toArray();
             id = id[0]["id"];
             newUser["id"] = id+1;
-            const result = db.collection('users').insertOne(newUser);
+            db.collection('users').insertOne(newUser);
         }
     }
     catch(e){
