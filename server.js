@@ -1,11 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+const PORT = process.env.PORT || 5000;
 const app = express();
+app.set('port', (process.env.PORT || 5000));
+
+if (process.env.NODE_ENV === 'production'){
+    app.use(express.static('frontend/build'));
+    app.get('*', (req, res) =>{
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 const MongoClient = require('mongodb').MongoClient;
-const url ='mongodb+srv://COP4331:%40COP4331bestgroup@cluster0.3oshecf.mongodb.net/?retryWrites=true&w=majority';
-const client = new MongoClient(url);
+const client = new MongoClient(process.env.MONGODB_URI);
 client.connect();
 
 app.use(cors());
@@ -28,9 +38,10 @@ app.post('/api/login', async (req, res, next) => {
     // outgoing: id, firstName, lastName, error
     let error = '';
     const { email, password } = req.body;
+    let results = [];
     try{
         const db = client.db("FinalFitness");
-        const results = await db.collection('users').find({ email: email, password: password }).toArray();
+        results = await db.collection('users').find({ email: email, password: password }).toArray();
     }
     catch(e) {
         error = e.toString();
@@ -66,7 +77,7 @@ app.post('/api/register', async (req, res, next) => {
             let id = await db.collection('users').find().sort({"id": -1}).limit(1).toArray();
             id = id[0]["id"];
             newUser["id"] = id+1;
-            const result = db.collection('users').insertOne(newUser);
+            db.collection('users').insertOne(newUser);
         }
     }
     catch(e){
@@ -79,4 +90,6 @@ app.post('/api/register', async (req, res, next) => {
 });
 
 
-app.listen(5000);
+app.listen(PORT, () =>{
+    console.log('Server listening on port ' + PORT);
+});
