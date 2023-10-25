@@ -38,6 +38,7 @@ app.post('/api/login', async (req, res, next) => {
     // outgoing: id, firstName, lastName, error
     let error = '';
     const { email, password } = req.body;
+
     let results = [];
     try{
         const db = client.db("FinalFitness");
