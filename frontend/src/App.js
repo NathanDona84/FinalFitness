@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import './App.css';
 import './styles.css';
 import LoginPage from './pages/LoginPage';
-import CardPage from './pages/CardPage';
+import HomePage from './pages/HomePage';
 function App() {
     return (
         <Router >
@@ -11,8 +11,8 @@ function App() {
                 <Route path="/" exact>
                     <LoginPage />
                 </Route>
-                <Route path="/cards" exact>
-                    <CardPage />
+                <Route path="/home" exact>
+                    <HomePage />
                 </Route>
                 <Redirect to="/" />
             </Switch>
