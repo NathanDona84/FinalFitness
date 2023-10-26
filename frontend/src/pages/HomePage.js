@@ -2,7 +2,8 @@ import React from 'react';
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
 import CardUI from '../components/CardUI';
-const HomePage = () => {
+
+export default function HomePage(props){
     return (
         <div>
             <PageTitle />
@@ -11,4 +12,3 @@ const HomePage = () => {
         </div>
     );
 }
-export default HomePage;

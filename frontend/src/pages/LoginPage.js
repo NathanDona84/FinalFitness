@@ -3,20 +3,20 @@ import "../styles.css";
 import SignInForm from "../components/SignIn";
 import SignUpForm from "../components/SignUp"
 
-export default function App() {
+export default function LoginPage(props) {
   const [type, setType] = useState("signIn");
   const [message, setMessage] = useState('');
+
   const handleOnClick = text => {
     if (text !== type) {
       setType(text);
       return;
     }
   };
-  const containerClass =
-    "container " + (type === "signUp" ? "right-panel-active" : "");
+
+  const containerClass = "container " + (type === "signUp" ? "right-panel-active" : "");
   return (
     <div className="App">
-      <h2>Sign in/up Form</h2>
       <div className={containerClass} id="container">
         <SignUpForm />
         <SignInForm />

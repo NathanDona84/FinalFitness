@@ -75,7 +75,7 @@
     border-color: #ffffff;
   }
   
-  form {
+  .wasForm {
     background-color: #ffffff;
     display: flex;
     align-items: center;

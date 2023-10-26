@@ -1,87 +1,81 @@
-import React from "react";
-function SignUpForm() {
+import React, { useState, useEffect } from "react";
+import {buildPath} from '../App.js';
+import axios from 'axios';
+import "../styles.css";
 
-    var email;
-    var password;
-    var firstName;
-    var lastName;
+export default function SignUp(props) {
+    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [register, setRegister] = useState(0);
 
-    const [message, setMessage] = React.useState('');
-
-    const doSignUp = async event => {
-        event.preventDefault();
-        console.log("inside doSignUp")
-        var obj = {
-            email: email.value, password: password.value, firstName: firstName.value,
-            lastName: lastName.value
-        };
-        console.log(`login: ${obj.Login} password: ${obj.Password} userID: ${obj.UserId}`);
-        var js = JSON.stringify(obj);
-        console.log(`JS: ${js}`);
-        try {
-            const response = await fetch('http://localhost:5000/api/register',
-                {
-                    method: 'POST', body: js, headers: {
-                        'Content-Type':
-                            'application/json'
+    useEffect(() => {
+        if(firstName == "" && register == 1){
+            setMessage("First Name Cannot Be Empty");
+            setRegister(0);
+        }
+        else if(lastName == "" && register == 1){
+            setMessage("Last Name Cannot Be Empty");
+            setRegister(0);
+        }
+        else if(email == "" && register == 1){
+            setMessage("Email Cannot Be Empty");
+            setRegister(0);
+        }
+        else if(password == "" && register == 1){
+            setMessage("Password Cannot Be Empty");
+            setRegister(0);
+        }
+        else if(register == 1){
+            setMessage("");
+            axios
+                .post(buildPath('api/register'),
+                    {
+                        "firstName": firstName,
+                        "lastName": lastName,
+                        "email": email,
+                        "password": password
+                    })
+                .then((response) => {
+                    if(response["data"]["inserted"] == -1){
+                        setMessage(response["data"]["error"]);
+                        setRegister(0);
                     }
-                });
-            var res = JSON.parse(await response.text());
-            console.log(res);
-            if (res.id <= 0) {
-                setMessage('User/Password combination incorrect');
-            }
-            else {
-                var user =
-                    { firstName: res.firstName, lastName: res.lastName, id: res.id }
-                localStorage.setItem('user_data', JSON.stringify(user));
-                setMessage('');
-                //window.location.href = '/cards';
-            }
+                    else{
+                        setMessage("Account Created");
+                        setRegister(0);
+                    }
+                })
         }
-        catch (e) {
-            alert(e.toString());
-            return;
-        }
-    };
+    }, [register]); 
 
     return (
         <div className="form-container sign-up-container">
-            <form onSubmit={doSignUp}>
+            <div className="wasForm">
                 <h1>Create Account</h1>
-                <span>or use your email for registration</span>
+                <span style={{display: "inline-block"}}>or use your email for registration</span>
                 <label>First Name</label>
-                <input
-                    type="text"
-                    name="fname"
-                    ref={(c) => firstName = c}
-                    placeholder="First Name"
+                <input  type="text" name="fname" placeholder="First Name" 
+                    onChange={(e) => {setFirstName(e.target.value)}}
                 />
                 <label>Last Name</label>
-                <input
-                    type="text"
-                    name="lname"
-                    ref={(c) => lastName = c}
-                    placeholder="Last Name"
+                <input type="text" name="lname" placeholder="Last Name"
+                    onChange={(e) => {setLastName(e.target.value)}}
                 />
                 <label>Email:</label>
-                <input
-                    type="email"
-                    name="email"
-                    ref={(c) => email = c}
-                    placeholder="Email"
+                <input type="email" name="email" placeholder="Email"
+                    onChange={(e) => {setEmail(e.target.value)}}
                 />
                 <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    ref={(c) => password = c}
-                    placeholder="Password"
+                <input type="password" name="password" placeholder="Password"
+                    onChange={(e) => {setPassword(e.target.value)}}
                 />
-                <button onClick={doSignUp}>Sign Up</button>
-            </form>
+                <button onClick={() => {setRegister(1)}}>Sign Up</button>
+                <span id="loginResult">{message}</span>
+            </div>
         </div>
     );
 }
 
-export default SignUpForm;

@@ -1,4 +1,5 @@
 import React from 'react';
+
 function LoggedInName() {
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);

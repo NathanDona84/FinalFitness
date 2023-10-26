@@ -1,76 +1,63 @@
-import React from "react";
-function SignInForm() {
-    var email;
-    var password;
-    const [message, setMessage] = React.useState('');
-    const [state, setState] = React.useState({
-        email: "",
-        password: ""
-    });
+import React, { useState, useEffect } from "react";
+import {buildPath} from '../App.js';
+import axios from 'axios';
+import "../styles.css";
 
-    const doLogin = async event => {
-        event.preventDefault();
-        console.log("inside dologin")
-        var obj = { email: email.value, password: password.value };
-        console.log("obj passed: " + obj.email + obj.password);
-        var js = JSON.stringify(obj);
-        try {
-            const response = await fetch('http://localhost:5000/api/login',
-                {
-                    method: 'POST', body: js, headers: {
-                        'Content-Type':
-                            'application/json'
+export default function SignInForm(props) {
+    const [message, setMessage] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [login, setLogin] = useState(0);
+
+    useEffect(() => {
+        if(email == "" && login == 1){
+            setMessage("Email Cannot Be Empty");
+            setLogin(0);
+        }
+        else if(password == "" && login == 1){
+            setMessage("Password Cannot Be Empty");
+            setLogin(0);
+        }
+        else if(login == 1){
+            setMessage("");
+            console.log(email+" "+password);
+            axios
+                .post(buildPath('api/login'),
+                    {
+                        "email": email,
+                        "password": password
+                    })
+                .then((response) => {
+                    if(response["data"]["id"] == -1){
+                        setMessage("Email/Password Combination Incorrect");
+                        setLogin(0);
                     }
-                });
-            var res = JSON.parse(await response.text());
-            console.log(`result is ${res.id}`);
-            if (res.id <= 0) {
-                setMessage('User/Password combination incorrect');
-            }
-            else {
-                var user =
-                    { firstName: res.firstName, lastName: res.lastName, id: res._id }
-                    console.log(user.id)
-                localStorage.setItem('user_data', JSON.stringify(user));
-                setMessage('');
-                window.location.href = '/home';
-            }
+                    else{
+                        localStorage.setItem('user_data', JSON.stringify(response["data"]));
+                        window.location.href = '/home';
+                    }
+                })
         }
-        catch (e) {
-            alert(e.toString());
-            return;
-        }
-    };
+    }, [login]); 
 
     return (
         <div className="form-container sign-in-container">
-            <form onSubmit={doLogin}>
+            <div className="wasForm">
                 <h1>Sign in</h1>
                 <span>or use your account</span>
-                <label>Username</label>
-                <input
-                    type="text"
-                    placeholder="Email"
-                    name="email"
-                    id="email"
-                    ref={(c) => email = c}
+                <label>Email</label>
+                <input type="text" placeholder="Email" name="email" id="email" 
+                    onChange={(e) => {setEmail(e.target.value);}}
                 />
                 <label>Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    d="password" 
-                    placeholder="Password"
-                    ref={(c) => password = c}
+                <input id="password" type="password" name="password" placeholder="Password"
+                    onChange={(e) => {setPassword(e.target.value)}}
                 />
                 <a href="#">Forgot your password?</a>
-                <button onClick={doLogin}>Sign In</button>
+                <button onClick={() => {setLogin(1)}}>Sign In</button>
                 <span id="loginResult">{message}</span>
-            </form>
-            
+            </div>
         </div>
     );
 }
 
-export default SignInForm;
