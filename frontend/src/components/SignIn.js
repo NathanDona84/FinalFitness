@@ -46,15 +46,15 @@ export default function SignInForm(props) {
                 <h1>Sign in</h1>
                 <span>or use your account</span>
                 <label>Email</label>
-                <input type="text" placeholder="Email" name="email" id="email" 
+                <input className="signInput" type="text" placeholder="Email" name="email" id="email" 
                     onChange={(e) => {setEmail(e.target.value);}}
                 />
                 <label>Password</label>
-                <input id="password" type="password" name="password" placeholder="Password"
+                <input className="signInput" id="password" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
                 <a href="#">Forgot your password?</a>
-                <button onClick={() => {setLogin(1)}}>Sign In</button>
+                <button className="signInButton" onClick={() => {setLogin(1)}}>Sign In</button>
                 <span id="loginResult">{message}</span>
             </div>
         </div>

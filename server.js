@@ -79,6 +79,8 @@ app.post('/api/register', async (req, res, next) => {
             id = id[0]["id"];
             newUser["id"] = id+1;
             db.collection('users').insertOne(newUser);
+            newConsumed = {userId: id+1, dates: {}};
+            db.collection('consumed').insertOne(newConsumed);
         }
     }
     catch(e){
