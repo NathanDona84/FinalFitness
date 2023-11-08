@@ -12,7 +12,7 @@ export default function HomePage(props){
     return (
         <div>
             <NavDrawer />
-            {userId}
+            {userId}x
         </div>
     );
 }
