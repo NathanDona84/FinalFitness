@@ -29,12 +29,12 @@ export default function SignInForm(props) {
                     })
                 .then((response) => {
                     if(response["data"]["id"] == -1){
-                        setMessage("Email/Password Combination Incorrect");
+                        setMessage(response["data"]["error"]);
                         setLogin(0);
                     }
                     else{
-                        localStorage.setItem('user_data', JSON.stringify(response["data"]));
-                        window.location.href = '/home';
+                        localStorage.setItem('user_data', JSON.stringify(response["data"]["info"]));
+                        window.location.href = '/nutrition';
                     }
                 })
         }

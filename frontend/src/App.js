@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch, Routes, BrowserRouter
 import './App.css';
 import './styles.css';
 import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
+import NutritionPage from './pages/NutritionPage';
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -20,7 +20,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LoginPage />} />
-                <Route path="/home" element={<HomePage />} />
+                <Route path="/nutrition" element={<NutritionPage />} />
             </Routes>
         </BrowserRouter>
     );

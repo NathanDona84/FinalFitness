@@ -38,10 +38,7 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 25px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 25px)`,
-  },
+  width: `88px`,
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({

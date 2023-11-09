@@ -254,4 +254,100 @@
     color: #3c97bf;
     text-decoration: none;
   }
+
+
+  /* Nutrition Page */
+
+  .mainContainer {
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 66px);
+    width: calc(100vw - 90px);
+    position: absolute;
+    left: 89px;
+    top: 65px;
+    padding: 1vw;
+  }
+
+  .dateContainer{
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .displayDate{
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5vw;
+    font-weight: 800;
+  }
+
+  .progressContainer{
+    border: 1px solid #b8b7b7;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100px;
+    margin-top: 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5vw;
+  }
   
+  .nutritionTableHeader{
+    text-align: left;
+    font-size: calc(.5vw + 15px);
+    font-weight: 100;
+    font-family: "roboto";
+  }
+
+  .nutritionTableHeaderSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.5vw + 15px);
+    position: relative;
+    bottom: 2px;
+  }
+
+  .nutritionTableDivider{
+    width: 169%;
+    height: 1px;
+    background-color: #b8b7b7;
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+    right: 10px;
+  }
+
+  .trackedContainer{
+    height: 60px;
+    font-size: 16px;
+  }
+
+  .nutritionTableMetricsData{
+    width: 60%;
+    padding-right: 7%;
+  }
+
+  .nutritionTableCurrentDataSpan{
+    font-family: "roboto";
+    font-size: 18px;
+    position: relative;
+    top: 7px;
+  }
+
+  .nutritionTableGoalDataSpan{
+    font-family: "roboto";
+    font-size: 18px;
+    position: relative;
+    top: 7px;
+  }
+
+  
+
+
+
+
+
+
+
