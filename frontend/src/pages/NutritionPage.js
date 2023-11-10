@@ -5,6 +5,9 @@ import axios from 'axios';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
 function LinearProgressWithLabel(props) {
     let value = "";
@@ -30,7 +33,7 @@ function LinearProgressWithLabel(props) {
                 </Box>
                 <Box sx={{ minWidth: 35 }}>
                     <Typography variant="body2" color="text.secondary">
-                        N/A
+                        -
                     </Typography>
                 </Box>
             </Box>
@@ -67,6 +70,7 @@ export default function NutritionPage(props){
     const [curProtein, setCurProtein] = useState(0);
     const [curSteps, setCurSteps] = useState(0);
     const [curWater, setCurWater] = useState(0);
+    const [consumedTodayLog, setConsumedTodayLog] = useState([]);
 
     useEffect(() => {
         let temp = new Date();
@@ -129,10 +133,30 @@ export default function NutritionPage(props){
             setCurWater(water);
             
             console.log(consumedToday);
+            if(consumedToday.length > 0){
+                let consumedTodayDup = consumedToday.slice();
+                let consumedTodayOrdered = [];
+                let latest = consumedTodayDup[0];
+                let latestIndex = 0;
+                let length = consumedTodayDup.length;
+                for (let i=0; i<length; i++){
+                    consumedTodayDup.forEach((element, index) => {
+                        if(element["time"] > latest["time"]){
+                            latest = element;
+                            latestIndex = index;
+                        }
+                    });
+                    consumedTodayOrdered.push(latest);
+                    consumedTodayDup.splice(latestIndex, 1);
+                    latest = consumedTodayDup[0];
+                }
+                setConsumedTodayLog(consumedTodayOrdered);
+                
+            }
         }
     }, [consumed]);
 
-    console.log(tracked)
+    console.log(consumedTodayLog);
     return (
         <div>
             <NavDrawer />
@@ -141,60 +165,169 @@ export default function NutritionPage(props){
                     <span className='displayDate'>{displayDate}</span>
                 </div>
                 <div className='progressContainer'>
-                   <table>
-                        <tr className="nutritionTableHeaderRow">
-                            <th className="nutritionTableHeader"><span className='nutritionTableHeaderSpan'>Metric</span></th>
-                            <th className="nutritionTableHeader"><span className='nutritionTableHeaderSpan'>Current</span></th>
-                            <th className="nutritionTableHeader"><span className='nutritionTableHeaderSpan'>Goal</span></th>
-                        </tr>
-                        <div className='nutritionTableDivider'></div>
-                        {trackedKeys.map((elem, index) => {
-                            let current = elem == "calories" ? curCalories : elem == "carbs" ? curCarbs : elem == "fat" ? curFat : elem == "protein" ? curProtein : elem == "steps" ? curSteps : curWater;
-                            let barColor = elem == "calories" ? "#CA00F7DD" : elem == "carbs" ? "#00EBF7FF" : elem == "fat" ? "#00F756FF" : elem == "protein" ? "#F7EF00FF" : elem == "steps" ? "#F78400FF" : "#1976d2";
-                            let backColor = elem == "calories" ? "#CA00F730" : elem == "carbs" ? "#00EBF730" : elem == "fat" ? "#00F75630" : elem == "protein" ? "#F7EF0040" : elem == "steps" ? "#F7840030" : "#a7caed";
-                            let label = elem.charAt(0).toUpperCase()+""+elem.slice(1);
-                            if(tracked[elem] != -1){
-                                let progress = (current/tracked[elem]) * 100; 
-                                return(
-                                    <tr className='trackedContainer' key={index}>
-                                        <td className='nutritionTableMetricsData'>
-                                            {label}
-                                            <LinearProgressWithLabel value={progress} sx={{borderRadius: "5px", backgroundColor: backColor, '& .MuiLinearProgress-bar': {backgroundColor: barColor}}} />
-                                        </td>
-                                        <td className='nutritionTableCurrentData'>
-                                            <span className='nutritionTableCurrentDataSpan'>
-                                                {elem == "calories" ? curCalories+" cals" : elem == "carbs" ? curCarbs+"g" : elem == "fat" ? curFat+"g" : elem == "protein" ? curProtein+"g" : elem == "steps" ? curSteps : curWater+"ml"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className='nutritionTableGoalDataSpan'>
-                                                {tracked[elem]}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                );
-                            }
-                            else{
-                                return(
-                                    <tr className='trackedContainer' key={index}>
-                                        <td className='nutritionTableMetricsData'>
-                                            {label}
-                                            <LinearProgressWithLabel value={"N/A"} />
-                                        </td>
-                                        <td className='nutritionTableCurrentData'>
-                                            <span className='nutritionTableCurrentDataSpan'>
-                                                {elem == "calories" ? curCalories+" cals" : elem == "carbs" ? curCarbs+"g" : elem == "fat" ? curFat+"g" : elem == "protein" ? curProtein+"g" : elem == "steps" ? curSteps : curWater+"ml"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className='nutritionTableGoalDataSpan'>
-                                                N/A
-                                            </span>
-                                        </td>
-                                    </tr>
-                                );
-                            }
-                        })}
+                    {trackedKeys.length > 0 ? (
+                        <table>
+                            <thead>
+                                <tr className="progressTableHeaderRow">
+                                    <th className="progressTableHeader"><span className='progressTableHeaderSpan'>Metric</span></th>
+                                    <th className="progressTableHeader"><span className='progressTableHeaderSpan'>Current</span></th>
+                                    <th className="progressTableHeader"><span className='progressTableHeaderSpan'>Goal</span></th>
+                                </tr>
+                            </thead>
+                            <div className='progressTableDivider'></div>
+                            <tbody>
+                                {trackedKeys.map((elem, index) => {
+                                    let current = elem == "calories" ? curCalories : elem == "carbs" ? curCarbs : elem == "fat" ? curFat : elem == "protein" ? curProtein : elem == "steps" ? curSteps : curWater;
+                                    let barColor = elem == "calories" ? "#CA00F7DD" : elem == "carbs" ? "#00EBF7FF" : elem == "fat" ? "#00F756FF" : elem == "protein" ? "#F7EF00FF" : elem == "steps" ? "#F78400FF" : "#1976d2";
+                                    let backColor = elem == "calories" ? "#CA00F730" : elem == "carbs" ? "#00EBF730" : elem == "fat" ? "#00F75630" : elem == "protein" ? "#F7EF0040" : elem == "steps" ? "#F7840030" : "#a7caed";
+                                    let label = elem.charAt(0).toUpperCase()+""+elem.slice(1);
+                                    if(tracked[elem] != -1){
+                                        let progress = (current/tracked[elem]) * 100; 
+                                        return(
+                                            <tr className='trackedContainer' key={index}>
+                                                <td className='progressTableMetricsData'>
+                                                    {label}
+                                                    <LinearProgressWithLabel value={progress} sx={{borderRadius: "5px", backgroundColor: backColor, '& .MuiLinearProgress-bar': {backgroundColor: barColor}}} />
+                                                </td>
+                                                <td className='progressTableCurrentData'>
+                                                    <span className='progressTableCurrentDataSpan'>
+                                                        {elem == "calories" ? curCalories+" cals" : elem == "carbs" ? curCarbs+"g" : elem == "fat" ? curFat+"g" : elem == "protein" ? curProtein+"g" : elem == "steps" ? curSteps+" steps" : curWater+"ml"}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className='progressTableGoalDataSpan'>
+                                                        {tracked[elem]}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                    else{
+                                        return(
+                                            <tr className='trackedContainer' key={index}>
+                                                <td className='progressTableMetricsData'>
+                                                    {label}
+                                                    <LinearProgressWithLabel value={"-"} />
+                                                </td>
+                                                <td className='progressTableCurrentData'>
+                                                    <span className='progressTableCurrentDataSpan'>
+                                                        {elem == "calories" ? curCalories+" cals" : elem == "carbs" ? curCarbs+"g" : elem == "fat" ? curFat+"g" : elem == "protein" ? curProtein+"g" : elem == "steps" ? curSteps+" steps" : curWater+"ml"}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className='progressTableGoalDataSpan'>
+                                                        -
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                })}
+                            </tbody>
+                        </table> 
+                    ) : (
+                        "No Tracked Metrics"
+                    )}
+                </div>
+                <div className='logContainer'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className='logTableHeader' style={{width: "6%"}}><span className='logTableHeaderSpan'>Type</span></th>
+                                <th className='logTableHeader' style={{width: "20%"}}><span className='logTableHeaderNameSpan'>Name</span></th>
+                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Calories</span></th>
+                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Carbs</span></th>
+                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Fat</span></th>
+                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Protein</span></th>
+                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Amount</span></th>
+                                <th className='logTableHeader' style={{width: "10%"}}><span className='logTableHeaderSpan'>Time</span></th>
+                            </tr>
+                            
+                        </thead>
+                        <div className='logTableDivider'></div>
+                        <tbody>
+                            {consumedTodayLog.map((element, index) => {
+                                let time = "";
+                                let numTime = Number(element["time"]);
+                                let amPm = "am";
+                                if(numTime > 1159)
+                                    amPm = "pm";
+                                if(numTime > 1259){
+                                    numTime = numTime - 1200;
+                                }
+                                if(numTime < 60)
+                                    numTime = numTime + 1200;
+                                time = numTime.toString().slice(0, -2) + ":" + numTime.toString().slice(-2)+" "+amPm;
+                                if(element["type"] == "food"){
+                                    return(
+                                        <tr>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataTypeSpan'>
+                                                    <LunchDiningIcon fontSize="large" sx={{ color: "#757575" }}/>
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataNameSpan'>
+                                                    {element["name"]}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {element["calories"] != -1 ? element["calories"]+" cals" : "-"}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {element["carbs"] != -1 ? element["carbs"]+"g" : "-"}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {element["fat"] != -1 ? element["fat"]+"g" : "-"}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {element["protein"] != -1 ? element["protein"]+"g" : "-"}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {time}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                }
+                                else{
+                                    return(
+                                        <tr>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataTypeSpan'>
+                                                    {element["type"] == "water" ? <WaterDropIcon fontSize='large' sx={{ color: "#757575" }}/> : <DirectionsRunIcon fontSize='large' sx={{ color: "#757575" }}/> }
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataNameSpan'>
+                                                    {element["type"].slice(0, 1).toUpperCase()+element["type"].slice(1)}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                            <td className='logTableData'>
+                                                <span className='logTableDataSpan'>
+                                                    {element["type"] == "water" ? element["amount"] + "ml" : element["amount"]+" steps"}
+                                                </span>
+                                            </td>
+                                            <td className='logTableData'><span className='logTableDataSpan'>{time}</span></td>
+                                        </tr>
+                                    );
+                                }
+                            })}
+                        </tbody>
                     </table>
                 </div>
             </div>
