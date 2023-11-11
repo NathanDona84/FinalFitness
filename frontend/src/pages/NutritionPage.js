@@ -8,6 +8,10 @@ import Typography from '@mui/material/Typography';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import dayjs from 'dayjs';
 
 function LinearProgressWithLabel(props) {
     let value = "";
@@ -102,6 +106,39 @@ export default function NutritionPage(props){
     }, []);
 
     useEffect(() => {
+        if(date.length > 0){
+            console.log("hey "+date)
+            let year = date.slice(0, 4);
+            let month = date.slice(4, 6);
+            let day = date.slice(6);
+            console.log("hey2 "+day)
+            if(day.slice(0, 1) == "0")
+                day = day.slice(1);
+            console.log("hey3 "+day)
+            let suffix = "th";
+            if(day == "1")
+                suffix = "st";
+            else if(day == "2")
+                suffix = "nd";
+            else if(day == "3")
+                suffix = "rd";
+            let dateObj = new Date(Number(year), Number(month)-1, Number(day));
+            setDisplayDate(numToDay[dateObj.getDay()]+", "+numToMonth[dateObj.getMonth()]+" "+dateObj.getDate()+suffix);
+
+            axios
+                .post(buildPath('api/fetchConsumed'), 
+                    {
+                        "userId": userId,
+                        "date": date
+                    })
+                .then((response) => {
+                    if(response["data"]["error"] == "")
+                        setConsumed(response["data"]["info"])
+                })
+        }
+    }, [date]);
+
+    useEffect(() => {
         let consumedToday = [];
         if(Object.keys(consumed).includes("dates")){
             consumedToday = consumed["dates"][date];
@@ -132,7 +169,6 @@ export default function NutritionPage(props){
             setCurSteps(steps);
             setCurWater(water);
             
-            console.log(consumedToday);
             if(consumedToday.length > 0){
                 let consumedTodayDup = consumedToday.slice();
                 let consumedTodayOrdered = [];
@@ -151,18 +187,32 @@ export default function NutritionPage(props){
                     latest = consumedTodayDup[0];
                 }
                 setConsumedTodayLog(consumedTodayOrdered);
-                
+            }
+            else{
+                setConsumedTodayLog([]);
             }
         }
     }, [consumed]);
 
-    console.log(consumedTodayLog);
     return (
         <div>
             <NavDrawer />
             <div className='mainContainer'>
                 <div className='dateContainer'>
                     <span className='displayDate'>{displayDate}</span>
+                    <div className='datePickerContainer'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker label="" value={dayjs(date.slice(0,4)+"-"+date.slice(4,6)+"-"+date.slice(6))} 
+                                onChange={(newDate) => {
+                                    let temp = newDate.year()+""+(newDate.month() + 1);
+                                    if(newDate.date().toString().length == 1)
+                                        temp = temp + "0"+newDate.date().toString();
+                                    else
+                                        temp = temp+newDate.date().toString();
+                                    setDate(temp);
+                                }}/>
+                        </LocalizationProvider>
+                    </div>
                 </div>
                 <div className='progressContainer'>
                     {trackedKeys.length > 0 ? (
@@ -230,105 +280,109 @@ export default function NutritionPage(props){
                     )}
                 </div>
                 <div className='logContainer'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th className='logTableHeader' style={{width: "6%"}}><span className='logTableHeaderSpan'>Type</span></th>
-                                <th className='logTableHeader' style={{width: "20%"}}><span className='logTableHeaderNameSpan'>Name</span></th>
-                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Calories</span></th>
-                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Carbs</span></th>
-                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Fat</span></th>
-                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Protein</span></th>
-                                <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Amount</span></th>
-                                <th className='logTableHeader' style={{width: "10%"}}><span className='logTableHeaderSpan'>Time</span></th>
-                            </tr>
-                            
-                        </thead>
-                        <div className='logTableDivider'></div>
-                        <tbody>
-                            {consumedTodayLog.map((element, index) => {
-                                let time = "";
-                                let numTime = Number(element["time"]);
-                                let amPm = "am";
-                                if(numTime > 1159)
-                                    amPm = "pm";
-                                if(numTime > 1259){
-                                    numTime = numTime - 1200;
-                                }
-                                if(numTime < 60)
-                                    numTime = numTime + 1200;
-                                time = numTime.toString().slice(0, -2) + ":" + numTime.toString().slice(-2)+" "+amPm;
-                                if(element["type"] == "food"){
-                                    return(
-                                        <tr>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataTypeSpan'>
-                                                    <LunchDiningIcon fontSize="large" sx={{ color: "#757575" }}/>
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataNameSpan'>
-                                                    {element["name"]}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {element["calories"] != -1 ? element["calories"]+" cals" : "-"}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {element["carbs"] != -1 ? element["carbs"]+"g" : "-"}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {element["fat"] != -1 ? element["fat"]+"g" : "-"}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {element["protein"] != -1 ? element["protein"]+"g" : "-"}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {time}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    );
-                                }
-                                else{
-                                    return(
-                                        <tr>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataTypeSpan'>
-                                                    {element["type"] == "water" ? <WaterDropIcon fontSize='large' sx={{ color: "#757575" }}/> : <DirectionsRunIcon fontSize='large' sx={{ color: "#757575" }}/> }
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataNameSpan'>
-                                                    {element["type"].slice(0, 1).toUpperCase()+element["type"].slice(1)}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
-                                            <td className='logTableData'>
-                                                <span className='logTableDataSpan'>
-                                                    {element["type"] == "water" ? element["amount"] + "ml" : element["amount"]+" steps"}
-                                                </span>
-                                            </td>
-                                            <td className='logTableData'><span className='logTableDataSpan'>{time}</span></td>
-                                        </tr>
-                                    );
-                                }
-                            })}
-                        </tbody>
-                    </table>
+                    {consumedTodayLog.length > 0 ? (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th className='logTableHeader' style={{width: "6%"}}><span className='logTableHeaderSpan'>Type</span></th>
+                                    <th className='logTableHeader' style={{width: "20%"}}><span className='logTableHeaderNameSpan'>Name</span></th>
+                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Calories</span></th>
+                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Carbs</span></th>
+                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Fat</span></th>
+                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Protein</span></th>
+                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Amount</span></th>
+                                    <th className='logTableHeader' style={{width: "10%"}}><span className='logTableHeaderSpan'>Time</span></th>
+                                </tr>
+                                
+                            </thead>
+                            <div className='logTableDivider'></div>
+                            <tbody>
+                                {consumedTodayLog.map((element, index) => {
+                                    let time = "";
+                                    let numTime = Number(element["time"]);
+                                    let amPm = "am";
+                                    if(numTime > 1159)
+                                        amPm = "pm";
+                                    if(numTime > 1259){
+                                        numTime = numTime - 1200;
+                                    }
+                                    if(numTime < 60)
+                                        numTime = numTime + 1200;
+                                    time = numTime.toString().slice(0, -2) + ":" + numTime.toString().slice(-2)+" "+amPm;
+                                    if(element["type"] == "food"){
+                                        return(
+                                            <tr key={index}>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataTypeSpan'>
+                                                        <LunchDiningIcon fontSize="large" sx={{ color: "#757575" }}/>
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataNameSpan'>
+                                                        {element["name"]}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {element["calories"] != -1 ? element["calories"]+" cals" : "-"}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {element["carbs"] != -1 ? element["carbs"]+"g" : "-"}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {element["fat"] != -1 ? element["fat"]+"g" : "-"}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {element["protein"] != -1 ? element["protein"]+"g" : "-"}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {time}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                    else{
+                                        return(
+                                            <tr key={index}>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataTypeSpan'>
+                                                        {element["type"] == "water" ? <WaterDropIcon fontSize='large' sx={{ color: "#757575" }}/> : <DirectionsRunIcon fontSize='large' sx={{ color: "#757575" }}/> }
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataNameSpan'>
+                                                        {element["type"].slice(0, 1).toUpperCase()+element["type"].slice(1)}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>-</span></td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataSpan'>
+                                                        {element["type"] == "water" ? element["amount"] + "ml" : element["amount"]+" steps"}
+                                                    </span>
+                                                </td>
+                                                <td className='logTableData'><span className='logTableDataSpan'>{time}</span></td>
+                                            </tr>
+                                        );
+                                    }
+                                })}
+                            </tbody>
+                        </table>
+                    ) : (    
+                        "Nothing in Log"
+                    )}
                 </div>
             </div>
         </div>
