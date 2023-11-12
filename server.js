@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const { error } = require('console');
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -121,6 +122,51 @@ app.post('/api/fetchConsumed', async (req, res, next) => {
     }
     //console.log(newUser);
     ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+app.post('/api/addConsumedItem', async (req, res, next) => {
+    const { userId, date, item } = req.body;
+    let field = "dates."+date;
+    let error = "";
+    let id = 1;
+    let info = {};
+    try{
+        const db = client.db("FinalFitness");
+        await db.collection("consumed").updateOne(
+            {"userId": userId},
+            {$push: {[field]: item}}
+        )
+        info = await db.collection("consumed").find({"userId": userId}).toArray();
+        info = info[0];
+    }
+    catch(e){
+        error = e.toString();
+        id = -1;
+    }
+    let ret = {"id": id, "error": error, "info": info};
+    res.status(200).json(ret);
+});
+
+app.post('/api/updateTracked', async (req, res, next) => {
+    const { userId, tracked } = req.body;
+    let error = "";
+    let id = 1;
+    let info = {};
+    try{
+        const db = client.db("FinalFitness");
+        await db.collection("users").updateOne(
+            {"id": userId},
+            {$set: {"tracked": tracked}}
+        )
+        info = await db.collection("users").find({"id": userId}).toArray();
+        info = info[0];
+    }
+    catch(e){
+        error = e.toString();
+        id = -1;
+    }
+    let ret = {"id": id, "error": error, "info": info};
     res.status(200).json(ret);
 });
 

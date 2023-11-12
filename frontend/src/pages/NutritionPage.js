@@ -12,6 +12,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs';
+import AddNutritionMenu from '../components/AddNutritionMenu.js';
+import Popover from '@mui/material/Popover';
 
 function LinearProgressWithLabel(props) {
     let value = "";
@@ -46,22 +48,6 @@ function LinearProgressWithLabel(props) {
   }
 
 export default function NutritionPage(props){
-    let _ud = localStorage.getItem('user_data');
-    let ud = JSON.parse(_ud);
-    let userId = ud["id"];
-    let firstName = ud["firstName"];
-    let lastName = ud["lastName"];
-
-    let tracked = ud["tracked"];
-    tracked = Object.keys(tracked).sort().reduce(
-        (obj, key) => { 
-          obj[key] = tracked[key]; 
-          return obj;
-        }, 
-        {}
-    );
-    let trackedKeys = Object.keys(tracked);
-
     let numToDay = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"}
     let numToMonth = {0: "January", 1: "February", 2: "March", 3: "April", 4: "May", 5: "June", 6: "July", 7: "August", 8: "September", 9: "October", 10: "November", 11: "December"}
 
@@ -75,8 +61,29 @@ export default function NutritionPage(props){
     const [curSteps, setCurSteps] = useState(0);
     const [curWater, setCurWater] = useState(0);
     const [consumedTodayLog, setConsumedTodayLog] = useState([]);
+    const [openPopup, setOpenPopup] = useState(0);
+    const [tracked, setTracked] = useState({});
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
+        let _ud = localStorage.getItem('user_data');
+        let ud = JSON.parse(_ud);
+        let userIdTemp = ud["id"];
+        setUserId(userIdTemp);
+        setFirstName(ud["firstName"]);
+        setLastName(ud["lastName"]);
+        let trackedTemp = ud["tracked"];
+        trackedTemp = Object.keys(trackedTemp).sort().reduce(
+            (obj, key) => { 
+            obj[key] = trackedTemp[key]; 
+            return obj;
+            }, 
+            {}
+        );
+        setTracked(trackedTemp);
+
         let temp = new Date();
         let year = temp.getFullYear().toString();
         let month = (temp.getMonth() + 1).toString();
@@ -96,7 +103,7 @@ export default function NutritionPage(props){
         axios
             .post(buildPath('api/fetchConsumed'), 
                 {
-                    "userId": userId,
+                    "userId": userIdTemp,
                     "date": (year+month+day)
                 })
             .then((response) => {
@@ -107,14 +114,11 @@ export default function NutritionPage(props){
 
     useEffect(() => {
         if(date.length > 0){
-            console.log("hey "+date)
             let year = date.slice(0, 4);
             let month = date.slice(4, 6);
             let day = date.slice(6);
-            console.log("hey2 "+day)
             if(day.slice(0, 1) == "0")
                 day = day.slice(1);
-            console.log("hey3 "+day)
             let suffix = "th";
             if(day == "1")
                 suffix = "st";
@@ -194,10 +198,18 @@ export default function NutritionPage(props){
         }
     }, [consumed]);
 
+    let popOverBackgroundStyle={};
+    if(openPopup == 0)
+        popOverBackgroundStyle={display: "none"};
+    let trackedKeys = Object.keys(tracked);
+    console.log(openPopup);
     return (
         <div>
             <NavDrawer />
             <div className='mainContainer'>
+                <div className='addNutritionContainer'>
+                        <AddNutritionMenu onSelect={(popNum) => {setOpenPopup(popNum)}}/>
+                </div>
                 <div className='dateContainer'>
                     <span className='displayDate'>{displayDate}</span>
                     <div className='datePickerContainer'>
@@ -385,6 +397,29 @@ export default function NutritionPage(props){
                     )}
                 </div>
             </div>
+            <div className='popOverContainer' id='popOverContainer'>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openPopup == 1}
+                    onClose={() => setOpenPopup(0)}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOver'>
+                        <div className='foodPOTitle'>
+                            Add Food Item
+                        </div>
+                    </div>
+                </Popover>
+            </div>
+            <div className='popOverBackground' style={popOverBackgroundStyle}></div>
         </div>
     );
 }
