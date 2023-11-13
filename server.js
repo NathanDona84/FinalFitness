@@ -133,6 +133,7 @@ app.post('/api/register', async (req, res, next) => {
 });
 
 app.get('/api/verify', async (req, res, next) => {
+    console.log("hey");
     try{
         let userId = Number(req.query.id);
         const db = client.db("FinalFitness");
