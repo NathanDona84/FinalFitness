@@ -132,10 +132,11 @@ app.post('/api/register', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-app.get('/api/verify', async (req, res, next) => {
+app.post('/api/verify', async (req, res, next) => {
+    const {userId} = req.body;
     console.log("hey");
     try{
-        let userId = Number(req.query.id);
+        //let userId = Number(req.query.id);
         const db = client.db("FinalFitness");
         let temp = await db.collection("users").updateOne(
             {"id": userId},
