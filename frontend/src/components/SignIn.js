@@ -20,7 +20,6 @@ export default function SignInForm(props) {
         }
         else if(login == 1){
             setMessage("");
-            console.log(email+" "+password);
             axios
                 .post(buildPath('api/login'),
                     {
