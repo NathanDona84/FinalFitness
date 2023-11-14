@@ -11,9 +11,9 @@ app.set('port', (process.env.PORT || 5000));
 
 if (process.env.NODE_ENV === 'production'){
     app.use(express.static('frontend/build'));
-    app.get('*', (req, res) =>{
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-    });
+    // app.get('*', (req, res) =>{
+    //     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    // });
 }
 
 const MongoClient = require('mongodb').MongoClient;
@@ -109,7 +109,8 @@ app.post('/api/register', async (req, res, next) => {
                 to : email,
                 from: "finalfitness@zohomail.com",
                 subject : "Please confirm your Email account",
-                html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
+                //html : 'Hello,<br> Please Click on the link to verify your email.<br><form method="post" action="'+link+'" novalidate><input type="hidden" name="extra_submit_param" value="extra_submit_value"><button type="submit" name="submit_param" value="submit_value" class="link-button">Click here to verify</button></form>' 
+                html: "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
             }
             console.log(mailOptions);
             smtpTransport.sendMail(mailOptions, function(error, response){
@@ -132,11 +133,11 @@ app.post('/api/register', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-app.post('/api/verify', async (req, res, next) => {
-    const {userId} = req.body;
+app.get('/api/verify', async (req, res, next) => {
+    //const {userId} = req.body;
     console.log("hey");
     try{
-        //let userId = Number(req.query.id);
+        let userId = Number(req.query.id);
         const db = client.db("FinalFitness");
         let temp = await db.collection("users").updateOne(
             {"id": userId},
