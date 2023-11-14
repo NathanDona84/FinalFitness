@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles.css";
 import SignInForm from "../components/SignIn";
 import SignUpForm from "../components/SignUp"
@@ -13,6 +13,10 @@ export default function LoginPage(props) {
       return;
     }
   };
+
+  useEffect(() => {
+    //setType(props.id);
+  }, []);
 
   const containerClass = "container " + (type === "signUp" ? "right-panel-active" : "");
   return (

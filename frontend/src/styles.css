@@ -68,6 +68,10 @@
     outline: none;
   }
   
+  .signUpButton:hover, .signInButton:hover{
+    background-color: #e14327;
+  }
+
   button.ghost {
     background-color: transparent;
     border-color: #ffffff;
@@ -347,7 +351,7 @@
     display: block;
     margin-bottom: 20px;
     position: relative;
-    right: 10px;
+    right: .5vw;
   }
 
   .trackedContainer{
@@ -428,7 +432,7 @@
     display: block;
     margin-bottom: 20px;
     position: relative;
-    right: 10px;
+    right: .5vw;
   }
 
   .logTableData{
@@ -480,24 +484,86 @@
   .popOverContainer{
     position: fixed;
     width: 500px;
-    height: 400px;
+    height: 630px;
     left: calc((100vw - 500px) / 2);
-    top: calc((100vh - 400px) / 2);
+    top: calc((100vh - 630px) / 2);
     z-index: -1;
   }
 
   .popOver{
     width: 500px;
-    height: 400px;
+    height: 630px;
+    padding: 20px;
+  }
+
+  .css-3bmhjh-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar {
+    display: none;
   }
 
   .foodPOTitle{
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 30px;
     text-align: center;
     font-weight: 700;
-    position: relative;
-    top: 20px;
   }
 
+  .addFoodInputContainer{
+    width: 85%;
+    margin-left: calc(15% / 2);
+    margin-top: 15px;
+  }
+
+  .addFoodLabel{
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .addFooodInput{
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    background-color: #eee;
+    padding: 12px 15px;
+    margin: 5px 0;
+  }
+
+  .addMessageContainer{
+    width: 85%;
+    margin-left: calc(15% / 2);
+    height: 25px;
+  }
+
+  .addNutritionButton{
+    border-radius: 20px;
+    border: 1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+    width: 164px;
+    margin-left: calc((100% - 164px) / 2);
+    margin-top: 15px;
+  }
+  
+  .addNutritionButton:active{
+    transform: scale(0.95);
+  }
+
+  .addNutritionButton:hover{
+    background-color: #e14327;
+  }
+  
+  .addNutritionButton:focus{
+    outline: none;
+  }
 

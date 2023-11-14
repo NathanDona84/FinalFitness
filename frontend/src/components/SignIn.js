@@ -32,7 +32,11 @@ export default function SignInForm(props) {
                         setLogin(0);
                     }
                     else{
-                        localStorage.setItem('user_data', JSON.stringify(response["data"]["info"]));
+                        let infoDup = Object.assign({}, response["data"]["info"]);
+                        let tracked = infoDup["tracked"];
+                        delete infoDup["tracked"];
+                        localStorage.setItem('user_data', JSON.stringify(infoDup));
+                        localStorage.setItem('tracked', JSON.stringify(tracked));
                         window.location.href = '/nutrition';
                     }
                 })

@@ -66,6 +66,14 @@ export default function NutritionPage(props){
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userId, setUserId] = useState(null);
+    const [addName, setAddName] = useState("");
+    const [addSubmit, setAddSubmit] = useState(0);
+    const [addCalories, setAddCalories] = useState("-1");
+    const [addCarbs, setAddCarbs] = useState("-1");
+    const [addFat, setAddFat] = useState("-1");
+    const [addProtein, setAddProtein] = useState("-1");
+    const [addAmount, setAddAmount] = useState("");
+    const [addMessage, setAddMessage] = useState("");
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
@@ -74,7 +82,7 @@ export default function NutritionPage(props){
         setUserId(userIdTemp);
         setFirstName(ud["firstName"]);
         setLastName(ud["lastName"]);
-        let trackedTemp = ud["tracked"];
+        let trackedTemp = JSON.parse(localStorage.getItem('tracked'));
         trackedTemp = Object.keys(trackedTemp).sort().reduce(
             (obj, key) => { 
             obj[key] = trackedTemp[key]; 
@@ -198,11 +206,55 @@ export default function NutritionPage(props){
         }
     }, [consumed]);
 
+    useEffect(()=>{
+        if(addSubmit == 1 && addName == ""){
+            setAddMessage("Name Cannot Be Empty");
+            setAddSubmit(0);
+        }
+        else if(addSubmit == 1){
+            let time = "";
+            let temp = new Date();
+            let hours = temp.getHours();
+            if(hours < 10)
+                hours = "0"+hours;
+            let minutes = temp.getMinutes();
+            if(minutes < 10)
+                minutes = "0"+minutes;
+            time = ""+hours+""+minutes;
+            setAddMessage("");
+            setOpenPopup(0);
+            axios
+                .post(buildPath("api/addConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": {
+                        "time": time,
+                        "type": "food",
+                        "name": addName,
+                        "calories": addCalories,
+                        "fat": addFat,
+                        "protein": addProtein,
+                        "carbs": addCarbs
+                    }
+                })
+                .then((response)=>{
+                    setConsumed(response["data"]["info"]);
+                    setAddName("");
+                    setAddCalories("-1");
+                    setAddFat("-1");
+                    setAddCarbs("-1");
+                    setAddProtein("-1");
+                    setAddSubmit(0);
+                })
+        }
+    }, [addSubmit]);
+
+
+
     let popOverBackgroundStyle={};
     if(openPopup == 0)
         popOverBackgroundStyle={display: "none"};
     let trackedKeys = Object.keys(tracked);
-    console.log(openPopup);
     return (
         <div>
             <NavDrawer />
@@ -245,6 +297,8 @@ export default function NutritionPage(props){
                                     let label = elem.charAt(0).toUpperCase()+""+elem.slice(1);
                                     if(tracked[elem] != -1){
                                         let progress = (current/tracked[elem]) * 100; 
+                                        if(progress > 100)
+                                            progress = 100;
                                         return(
                                             <tr className='trackedContainer' key={index}>
                                                 <td className='progressTableMetricsData'>
@@ -258,7 +312,7 @@ export default function NutritionPage(props){
                                                 </td>
                                                 <td>
                                                     <span className='progressTableGoalDataSpan'>
-                                                        {tracked[elem]}
+                                                        {elem == "calories" ? tracked[elem]+" cals" : elem == "carbs" ? tracked[elem]+"g" : elem == "fat" ? tracked[elem]+"g" : elem == "protein" ? tracked[elem]+"g" : elem == "steps" ? tracked[elem]+" steps" : tracked[elem]+"ml"}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -409,13 +463,47 @@ export default function NutritionPage(props){
                         horizontal: 'left',
                     }}
                     open={openPopup == 1}
-                    onClose={() => setOpenPopup(0)}
+                    onClose={() => {
+                        setOpenPopup(0);
+                        setAddMessage("");
+                        if(addSubmit == 0){
+                            setAddName("");
+                            setAddCalories("-1");
+                            setAddFat("-1");
+                            setAddCarbs("-1");
+                            setAddProtein("-1");
+                        }
+                    }}
                     sx={{zIndex: "9999"}}
                     >
                     <div className='popOver'>
                         <div className='foodPOTitle'>
                             Add Food Item
                         </div>
+                        <div className='addMessageContainer'>
+                            {addMessage}
+                        </div>
+                        <div className="addFoodInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addFoodLabel" htmlFor="foodItemName">Name*</label>
+                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter name" onChange={(e)=>{setAddName(e.target.value)}}/>
+                        </div>
+                        <div className="addFoodInputContainer">
+                            <label className="addFoodLabel" htmlFor="foodItemName">Calories</label>
+                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Eneter calories" onChange={(e)=>{setAddCalories(e.target.value)}}/>
+                        </div>
+                        <div className="addFoodInputContainer">
+                            <label className="addFoodLabel" htmlFor="foodItemName">Carbs (g)</label>
+                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter carbs" onChange={(e)=>{setAddCarbs(e.target.value)}}/>
+                        </div>
+                        <div className="addFoodInputContainer">
+                            <label className="addFoodLabel" htmlFor="foodItemName">Fat (g)</label>
+                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter fat" onChange={(e)=>{setAddFat(e.target.value)}}/>
+                        </div>
+                        <div className="addFoodInputContainer">
+                            <label className="addFoodLabel" htmlFor="foodItemName">Protein (g)</label>
+                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter protein" onChange={(e)=>{setAddProtein(e.target.value)}}/>
+                        </div>
+                        <button className="addNutritionButton" onClick={()=>{setAddSubmit(1)}}>Add Food</button>
                     </div>
                 </Popover>
             </div>
