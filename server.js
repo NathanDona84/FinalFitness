@@ -100,8 +100,8 @@ app.post('/api/register', async (req, res, next) => {
                 host: 'smtp.zoho.com',
                 secure: true,
                 auth: {
-                    user: "finalfitness@zohomail.com",
-                    pass: "Ai4K88AVjgwB"
+                    user: process.env.NODEMAILER_EMAIL,
+                    pass: process.env.NODEMAILER_PASSWORD
                 }
             });
             let mailOptions,host,link;
@@ -110,19 +110,17 @@ app.post('/api/register', async (req, res, next) => {
             link="http://"+req.get('host')+"/api/verify?id="+id;
             mailOptions={
                 to : email,
-                from: "finalfitness@zohomail.com",
-                subject : "Please confirm your Email account",
-                //html : 'Hello,<br> Please Click on the link to verify your email.<br><form method="post" action="'+link+'" novalidate><input type="hidden" name="extra_submit_param" value="extra_submit_value"><button type="submit" name="submit_param" value="submit_value" class="link-button">Click here to verify</button></form>' 
+                from: process.env.NODEMAILER_EMAIL,
+                subject : "Please Confirm Your Email Account",
                 html: "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
             }
             console.log(mailOptions);
-            smtpTransport.sendMail(mailOptions, function(error, response){
-            if(error){
-                    console.log(error);
-                res.end("error");
+            smtpTransport.sendMail(mailOptions, function(e, response){
+            if(e){
+                inserted = -1;
+                error = e;
             }else{
-                    console.log("Message sent: " + response.message);
-                res.end("sent");
+                console.log("Message sent: " + response.message);
                 }
             });
         }
@@ -131,14 +129,11 @@ app.post('/api/register', async (req, res, next) => {
         inserted = -1;
         error = e.toString();
     }
-    //console.log(newUser);
     let ret = {inserted: inserted, error: error};
     res.status(200).json(ret);
 });
 
 app.get('/api/verify', async (req, res, next) => {
-    //const {userId} = req.body;
-    console.log("hey");
     try{
         let userId = Number(req.query.id);
         const db = client.db("FinalFitness");
