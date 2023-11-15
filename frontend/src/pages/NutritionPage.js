@@ -74,6 +74,18 @@ export default function NutritionPage(props){
     const [addProtein, setAddProtein] = useState("-1");
     const [addAmount, setAddAmount] = useState("");
     const [addMessage, setAddMessage] = useState("");
+    const [trackedCalories, setTrackedCalories] = useState(null);
+    const [trackedCarbs, setTrackedCarbs] = useState(null);
+    const [trackedFat, setTrackedFat] = useState(null);
+    const [trackedProtein, setTrackedProtein] = useState(null);
+    const [trackedSteps, setTrackedSteps] = useState(null);
+    const [trackedWater, setTrackedWater] = useState(null);
+    const [trackedCaloriesGoal, setTrackedCaloriesGoal] = useState("-1");
+    const [trackedCarbsGoal, setTrackedCarbsGoal] = useState("-1");
+    const [trackedFatGoal, setTrackedFatGoal] = useState("-1");
+    const [trackedProteinGoal, setTrackedProteinGoal] = useState("-1");
+    const [trackedStepsGoal, setTrackedStepsGoal] = useState("-1");
+    const [trackedWaterGoal, setTrackedWaterGoal] = useState("-1");
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
@@ -91,6 +103,27 @@ export default function NutritionPage(props){
             {}
         );
         setTracked(trackedTemp);
+        
+        let trackedKeysTemp = Object.keys(trackedTemp);
+        setTrackedCalories(trackedKeysTemp.includes("calories"));
+        setTrackedCarbs(trackedKeysTemp.includes("carbs"));
+        setTrackedFat(trackedKeysTemp.includes("fat"));
+        setTrackedProtein(trackedKeysTemp.includes("protein"));
+        setTrackedSteps(trackedKeysTemp.includes("steps"));
+        setTrackedWater(trackedKeysTemp.includes("water"));
+
+        if(trackedKeysTemp.includes("calories"))
+            setTrackedCaloriesGoal(trackedTemp["calories"]);
+        if(trackedKeysTemp.includes("carbs"))
+            setTrackedCarbsGoal(trackedTemp["carbs"]);
+        if(trackedKeysTemp.includes("fat"))
+            setTrackedFatGoal(trackedTemp["fat"]);
+        if(trackedKeysTemp.includes("protein"))
+            setTrackedProteinGoal(trackedTemp["protein"]);
+        if(trackedKeysTemp.includes("steps"))
+            setTrackedStepsGoal(trackedTemp["steps"]);
+        if(trackedKeysTemp.includes("water"))
+            setTrackedWaterGoal(trackedTemp["water"]);
 
         let temp = new Date();
         let year = temp.getFullYear().toString();
@@ -247,6 +280,139 @@ export default function NutritionPage(props){
                     setAddSubmit(0);
                 })
         }
+
+        if(addSubmit == 2 && addAmount == ""){
+            setAddMessage("Amount Cannot Be Empty");
+            setAddSubmit(0);
+        }
+        else if(addSubmit == 2){
+            let time = "";
+            let temp = new Date();
+            let hours = temp.getHours();
+            if(hours < 10)
+                hours = "0"+hours;
+            let minutes = temp.getMinutes();
+            if(minutes < 10)
+                minutes = "0"+minutes;
+            time = ""+hours+""+minutes;
+            setAddMessage("");
+            setOpenPopup(0);
+            axios
+                .post(buildPath("api/addConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": {
+                        "time": time,
+                        "type": "water",
+                        "amount": addAmount
+                    }
+                })
+                .then((response)=>{
+                    setConsumed(response["data"]["info"]);
+                    setAddAmount("");
+                    setAddSubmit(0);
+                })
+        }
+
+        if(addSubmit == 3 && addAmount == ""){
+            setAddMessage("Amount Cannot Be Empty");
+            setAddSubmit(0);
+        }
+        else if(addSubmit == 3){
+            let time = "";
+            let temp = new Date();
+            let hours = temp.getHours();
+            if(hours < 10)
+                hours = "0"+hours;
+            let minutes = temp.getMinutes();
+            if(minutes < 10)
+                minutes = "0"+minutes;
+            time = ""+hours+""+minutes;
+            setAddMessage("");
+            setOpenPopup(0);
+            axios
+                .post(buildPath("api/addConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": {
+                        "time": time,
+                        "type": "steps",
+                        "amount": addAmount
+                    }
+                })
+                .then((response)=>{
+                    setConsumed(response["data"]["info"]);
+                    setAddAmount("");
+                    setAddSubmit(0);
+                })
+        }
+
+        if(addSubmit == 4){
+            if(!trackedCalories && trackedCaloriesGoal != "-1" && trackedCaloriesGoal != ""){
+                setAddMessage("Must Track Calories To Add Goal");
+                setAddSubmit(0);
+            }
+            else if(!trackedCarbs && trackedCarbsGoal != "-1" && trackedCarbsGoal != ""){
+                setAddMessage("Must Track Carbs To Add Goal");
+                setAddSubmit(0);
+            }
+            else if(!trackedFat && trackedFatGoal != "-1" && trackedFatGoal != ""){
+                setAddMessage("Must Track Fat To Add Goal");
+                setAddSubmit(0);
+            }
+            else if(!trackedProtein && trackedProteinGoal != "-1" && trackedProteinGoal != ""){
+                setAddMessage("Must Track Protein To Add Goal");
+                setAddSubmit(0);
+            }
+            else if(!trackedSteps && trackedStepsGoal != "-1" && trackedStepsGoal != ""){
+                setAddMessage("Must Track Steps To Add Goal");
+                setAddSubmit(0);
+            }
+            else if(!trackedWater && trackedWaterGoal != "-1" && trackedWaterGoal != ""){
+                setAddMessage("Must Track Water To Add Goal");
+                setAddSubmit(0);
+            }
+            else{
+                let newTracked = {};
+                if(trackedCalories)
+                    newTracked["calories"] = (trackedCaloriesGoal != "") ? trackedCaloriesGoal : "-1";
+                if(trackedCarbs)
+                    newTracked["carbs"] = (trackedCarbsGoal != "") ? trackedCarbsGoal : "-1";
+                if(trackedFat)
+                    newTracked["fat"] = (trackedFatGoal != "") ? trackedFatGoal : "-1";
+                if(trackedProtein)
+                    newTracked["protein"] = (trackedProteinGoal != "") ? trackedProteinGoal : "-1";
+                if(trackedSteps)
+                    newTracked["steps"] = (trackedStepsGoal != "") ? trackedStepsGoal : "-1";
+                if(trackedWater)
+                    newTracked["water"] = (trackedWaterGoal != "") ? trackedWaterGoal : "-1";
+
+                setAddMessage("");
+                setOpenPopup(0);
+                setTracked(newTracked);
+                axios
+                    .post(buildPath("api/updateTracked"), {
+                        "userId": userId,
+                        "tracked": newTracked
+                    })
+                    .then((response)=>{
+                        if(trackedCaloriesGoal == "")
+                            setTrackedCaloriesGoal("-1");
+                        if(trackedCarbsGoal == "")
+                            setTrackedCarbsGoal("-1");
+                        if(trackedFatGoal == "")
+                            setTrackedFatGoal("-1");
+                        if(trackedProteinGoal == "")
+                            setTrackedProteinGoal("-1");
+                        if(trackedStepsGoal == "")
+                            setTrackedStepsGoal("-1");
+                        if(trackedWaterGoal == "")
+                            setTrackedWaterGoal("-1");
+                        localStorage.setItem('tracked', JSON.stringify(newTracked));
+                        setAddSubmit(0);
+                    })
+            }
+        }
     }, [addSubmit]);
 
 
@@ -255,6 +421,11 @@ export default function NutritionPage(props){
     if(openPopup == 0)
         popOverBackgroundStyle={display: "none"};
     let trackedKeys = Object.keys(tracked);
+    let popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 630px) / 2)"};
+    if(openPopup == 2 || openPopup == 3)
+        popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 380px) / 2)"};
+    else if(openPopup == 4)
+    popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 600px) / 2)", top: "calc((100vh - 600px) / 2)"};
     return (
         <div>
             <NavDrawer />
@@ -451,7 +622,7 @@ export default function NutritionPage(props){
                     )}
                 </div>
             </div>
-            <div className='popOverContainer' id='popOverContainer'>
+            <div className='popOverContainer' id='popOverContainer' style={popUpContainerStyle}>
                 <Popover 
                     anchorEl={document.getElementById('popOverContainer')}
                     anchorOrigin={{
@@ -477,33 +648,230 @@ export default function NutritionPage(props){
                     sx={{zIndex: "9999"}}
                     >
                     <div className='popOver'>
-                        <div className='foodPOTitle'>
+                        <div className='popOverTitle'>
                             Add Food Item
                         </div>
                         <div className='addMessageContainer'>
                             {addMessage}
                         </div>
-                        <div className="addFoodInputContainer" style={{marginTop: '5px'}}>
-                            <label className="addFoodLabel" htmlFor="foodItemName">Name*</label>
-                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter name" onChange={(e)=>{setAddName(e.target.value)}}/>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Name*</label>
+                            <input className="addInput" name="foodItemName" type="text" placeholder="Enter name" onChange={(e)=>{setAddName(e.target.value)}}/>
                         </div>
-                        <div className="addFoodInputContainer">
-                            <label className="addFoodLabel" htmlFor="foodItemName">Calories</label>
-                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Eneter calories" onChange={(e)=>{setAddCalories(e.target.value)}}/>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Calories</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Eneter calories" onChange={(e)=>{setAddCalories(""+e.target.value)}}/>
                         </div>
-                        <div className="addFoodInputContainer">
-                            <label className="addFoodLabel" htmlFor="foodItemName">Carbs (g)</label>
-                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter carbs" onChange={(e)=>{setAddCarbs(e.target.value)}}/>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Carbs (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter carbs" onChange={(e)=>{setAddCarbs(""+e.target.value)}}/>
                         </div>
-                        <div className="addFoodInputContainer">
-                            <label className="addFoodLabel" htmlFor="foodItemName">Fat (g)</label>
-                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter fat" onChange={(e)=>{setAddFat(e.target.value)}}/>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Fat (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter fat" onChange={(e)=>{setAddFat(""+e.target.value)}}/>
                         </div>
-                        <div className="addFoodInputContainer">
-                            <label className="addFoodLabel" htmlFor="foodItemName">Protein (g)</label>
-                            <input className="addFooodInput" name="foodItemName" type="text" placeholder="Enter protein" onChange={(e)=>{setAddProtein(e.target.value)}}/>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Protein (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter protein" onChange={(e)=>{setAddProtein(""+e.target.value)}}/>
                         </div>
                         <button className="addNutritionButton" onClick={()=>{setAddSubmit(1)}}>Add Food</button>
+                    </div>
+                </Popover>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openPopup == 2}
+                    onClose={() => {
+                        setOpenPopup(0);
+                        setAddMessage("");
+                        if(addSubmit == 0){
+                            setAddAmount("");
+                        }
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOverWater'>
+                        <div className='popOverTitle'>
+                            Add Water
+                        </div>
+                        <div className='addMessageContainer'>
+                            {addMessage}
+                        </div>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Amount (ml)*</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter amount" onChange={(e)=>{setAddAmount(""+e.target.value)}}/>
+                        </div>
+                        <button className="addNutritionButton addWaterButton" onClick={()=>{setAddSubmit(2)}}>Add Water</button>
+                    </div>
+                </Popover>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openPopup == 3}
+                    onClose={() => {
+                        setOpenPopup(0);
+                        setAddMessage("");
+                        if(addSubmit == 0){
+                            setAddAmount("");
+                        }
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOverWater'>
+                        <div className='popOverTitle'>
+                            Add Steps
+                        </div>
+                        <div className='addMessageContainer'>
+                            {addMessage}
+                        </div>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Amount*</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter amount" onChange={(e)=>{setAddAmount(""+e.target.value)}}/>
+                        </div>
+                        <button className="addNutritionButton addWaterButton" onClick={()=>{setAddSubmit(3)}}>Add Steps</button>
+                    </div>
+                </Popover>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openPopup == 4}
+                    onClose={() => {
+                        setOpenPopup(0);
+                        setAddMessage("");
+                        setTrackedCalories(trackedKeys.includes("calories"));
+                        setTrackedCarbs(trackedKeys.includes("carbs"));
+                        setTrackedFat(trackedKeys.includes("fat"));
+                        setTrackedProtein(trackedKeys.includes("protein"));
+                        setTrackedSteps(trackedKeys.includes("steps"));
+                        setTrackedWater(trackedKeys.includes("water"));
+
+                        if(trackedKeys.includes("calories"))
+                            setTrackedCaloriesGoal(tracked["calories"]);
+                        else
+                            setTrackedCaloriesGoal("-1");
+                        if(trackedKeys.includes("carbs"))
+                            setTrackedCarbsGoal(tracked["carbs"]);
+                        else
+                            setTrackedCarbsGoal("-1");
+                        if(trackedKeys.includes("fat"))
+                            setTrackedFatGoal(tracked["fat"]);
+                        else
+                            setTrackedFatGoal("-1");
+                        if(trackedKeys.includes("protein"))
+                            setTrackedProteinGoal(tracked["protein"]);
+                        else
+                            setTrackedProteinGoal("-1");
+                        if(trackedKeys.includes("steps"))
+                            setTrackedStepsGoal(tracked["steps"]);
+                        else
+                            setTrackedStepsGoal("-1");
+                        if(trackedKeys.includes("water"))
+                            setTrackedWaterGoal(tracked["water"]);
+                        else
+                            setTrackedWaterGoal("-1");
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOverMTG'>
+                        <div className='popOverTitle'>
+                            Modify Trackers and Goals
+                        </div>
+                        <div className='addMessageContainer'>
+                            {addMessage}
+                        </div>
+                        <table className='mtgTable'>
+                            <thead>
+                                <tr>
+                                    <th style={{width: "10%"}}>Select</th>
+                                    <th style={{width: "30%"}}>Tracker</th>
+                                    <th>Goal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedCalories}
+                                        onChange={(e)=>{setTrackedCalories(!trackedCalories)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Calories</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add calorie goal" 
+                                        value={trackedCaloriesGoal != "-1" ? trackedCaloriesGoal : ""}
+                                        onChange={(e)=>{setTrackedCaloriesGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedCarbs}
+                                        onChange={(e)=>{setTrackedCarbs(!trackedCarbs)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Carbs (g)</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add carb goal" 
+                                        value={trackedCarbsGoal != "-1" ? trackedCarbsGoal : ""}
+                                        onChange={(e)=>{setTrackedCarbsGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedFat}
+                                        onChange={(e)=>{setTrackedFat(!trackedFat)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Fat (g)</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add fat goal" 
+                                        value={trackedFatGoal != "-1" ? trackedFatGoal : ""}
+                                        onChange={(e)=>{setTrackedFatGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedProtein}
+                                        onChange={(e)=>{setTrackedProtein(!trackedProtein)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Protein (g)</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add protein goal" 
+                                        value={trackedProteinGoal != "-1" ? trackedProteinGoal : ""}
+                                        onChange={(e)=>{setTrackedProteinGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedSteps}
+                                        onChange={(e)=>{setTrackedSteps(!trackedSteps)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Steps</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add step goal" 
+                                        value={trackedStepsGoal != "-1" ? trackedStepsGoal : ""} 
+                                        onChange={(e)=>{setTrackedStepsGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                                <tr className='mtgTableBodyRow'>
+                                    <td className='mtgTableSelectData'><input type='checkbox' checked={trackedWater}
+                                        onChange={(e)=>{setTrackedWater(!trackedWater)}}
+                                    /></td>
+                                    <td className='mtgTableTrackerData'>Water (ml)</td>
+                                    <td className='mtgTableGoalData'><input className="addInput" type="number" placeholder="Add water goal" 
+                                        value={trackedWaterGoal != "-1" ? trackedWaterGoal : ""}
+                                        onChange={(e)=>{setTrackedWaterGoal(""+e.target.value)}}
+                                    /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button className="addNutritionButton" onClick={()=>{setAddSubmit(4)}}>Update</button>
                     </div>
                 </Popover>
             </div>

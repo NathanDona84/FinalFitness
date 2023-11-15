@@ -483,10 +483,6 @@
 
   .popOverContainer{
     position: fixed;
-    width: 500px;
-    height: 630px;
-    left: calc((100vw - 500px) / 2);
-    top: calc((100vh - 630px) / 2);
     z-index: -1;
   }
 
@@ -494,33 +490,34 @@
     width: 500px;
     height: 630px;
     padding: 20px;
+    padding-top: 25px;
   }
 
   .css-3bmhjh-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar {
     display: none;
   }
 
-  .foodPOTitle{
+  .popOverTitle{
     font-family: 'Montserrat', sans-serif;
     font-size: 30px;
     text-align: center;
     font-weight: 700;
   }
 
-  .addFoodInputContainer{
+  .addInputContainer{
     width: 85%;
     margin-left: calc(15% / 2);
     margin-top: 15px;
   }
 
-  .addFoodLabel{
+  .addLabel{
     display: block;
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     text-align: left;
   }
 
-  .addFooodInput{
+  .addInput{
     border: none;
     border-radius: 5px;
     height: 40px;
@@ -536,6 +533,10 @@
     width: 85%;
     margin-left: calc(15% / 2);
     height: 25px;
+    font-family: 'Montserrat', sans-serif;
+    color: red;
+    margin-top: 5px;
+    text-align: center;
   }
 
   .addNutritionButton{
@@ -552,7 +553,7 @@
     cursor: pointer;
     width: 164px;
     margin-left: calc((100% - 164px) / 2);
-    margin-top: 15px;
+    margin-top: 23px;
   }
   
   .addNutritionButton:active{
@@ -567,3 +568,54 @@
     outline: none;
   }
 
+  .popOverWater{
+    width: 500px;
+    height: 290px;
+    padding: 20px;
+    padding-top: 30px;
+  }
+
+  .addWaterButton{
+    width: 200px;
+    font-size: 14px;
+    margin-left: calc((100% - 200px) / 2);
+    margin-top: 25px;
+  }
+
+  .popOverMTG{
+    width: 600px;
+    height: 600px;
+    padding: 20px;
+    padding-top: 25px;
+  }
+
+  .mtgTable{
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    margin-left: 20px;
+  }
+
+  .mtgTableBodyRow{
+    height: 55px;
+  }
+  
+  .mtgTableSelectData{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55px;
+  }
+
+  .mtgTableTrackerData{
+    text-align: center;
+    height: 55px;
+  }
+
+  .mtgTableGoalData{
+    display: flex;
+    justify-content: center;
+    height: 55px;
+  }
+  .mtgTableGoalData input{
+    width: 80%;
+  }

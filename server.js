@@ -205,21 +205,18 @@ app.post('/api/updateTracked', async (req, res, next) => {
     const { userId, tracked } = req.body;
     let error = "";
     let id = 1;
-    let info = {};
     try{
         const db = client.db("FinalFitness");
         await db.collection("users").updateOne(
             {"id": userId},
             {$set: {"tracked": tracked}}
         )
-        info = await db.collection("users").find({"id": userId}).toArray();
-        info = info[0];
     }
     catch(e){
         error = e.toString();
         id = -1;
     }
-    let ret = {"id": id, "error": error, "info": info};
+    let ret = {"id": id, "error": error};
     res.status(200).json(ret);
 });
 
