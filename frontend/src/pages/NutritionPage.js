@@ -264,10 +264,10 @@ export default function NutritionPage(props){
                         "time": time,
                         "type": "food",
                         "name": addName,
-                        "calories": addCalories,
-                        "fat": addFat,
-                        "protein": addProtein,
-                        "carbs": addCarbs
+                        "calories": addCalories == "" ? "-1" : addCalories,
+                        "fat": addFat == "" ? "-1" : addFat,
+                        "protein": addProtein == "" ? "-1" : addProtein,
+                        "carbs": addCarbs == "" ? "-1" : addCarbs
                     }
                 })
                 .then((response)=>{

@@ -20,6 +20,7 @@ import FastfoodIcon from '@mui/icons-material/Fastfood';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -97,6 +98,10 @@ export default function NavDrawer() {
     setOpen(false);
   };
 
+  let name = "";
+  let _ud = localStorage.getItem('user_data');
+  let ud = JSON.parse(_ud);
+  name = ud["firstName"]+" "+ud["lastName"];
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -115,9 +120,10 @@ export default function NavDrawer() {
           >
             <MenuIcon fontSize="large"/>
           </IconButton>
-          <Typography variant="h4" noWrap component="div" fontFamily={'Kanit, sans-serif'}>
+          <div style={{width: "500px", fontFamily: "Kanit, sans-serif", fontSize: "36px"}}>
             Final Fitness
-          </Typography>
+          </div>
+          <div style={{width: "100%", fontFamily: "Kanit, sans-serif", fontSize: "30px", textAlign: "right"}}>{name}</div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -129,7 +135,12 @@ export default function NavDrawer() {
         <Divider />
         <List sx={{pt: 0}}>
           {['Nutrition', 'Exercise', 'Calendar'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItem key={text} disablePadding sx={{ display: 'block' }}
+              onClick={()=>{
+                if(index == 0)
+                  window.location.href = "/nutrition";
+              }}
+            >
               <ListItemButton
                 sx={{
                   minHeight: 100,
@@ -147,7 +158,7 @@ export default function NavDrawer() {
                 >
                   {index === 0 ? <FastfoodIcon fontSize='large'/> : index === 1 ? <FitnessCenterIcon fontSize='large'/> : <CalendarMonthIcon fontSize='large'/>}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0}} />
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, marginTop: "5px"}} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -173,6 +184,33 @@ export default function NavDrawer() {
                         <SettingsIcon fontSize="large"/>
                     </ListItemIcon>
                     <ListItemText primary={"Settings"} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+            </ListItem>
+            <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}
+                onClick={() => {
+                  localStorage.removeItem("user_data"); 
+                  localStorage.removeItem("tracked");
+                  window.location.href = "/";
+                }}
+            >
+                <ListItemButton
+                    sx={{
+                        minHeight: 100,
+                        justifyContent: open ? 'initial' : 'center',
+                        px: 2.5,
+                    }}
+                >
+                    <ListItemIcon
+                        sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                            ml: 1.4
+                        }}
+                    >
+                        <LogoutIcon fontSize="large"/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Logout"} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
             </ListItem>
         </List>
