@@ -32,6 +32,7 @@ export default function SignInForm(props) {
                         setLogin(0);
                     }
                     else{
+                        setLogin(0);
                         let infoDup = Object.assign({}, response["data"]["info"]);
                         let tracked = infoDup["tracked"];
                         delete infoDup["tracked"];
@@ -47,7 +48,6 @@ export default function SignInForm(props) {
         <div className="form-container sign-in-container">
             <div className="wasForm">
                 <h1>Sign in</h1>
-                <span>or use your account</span>
                 <label>Email</label>
                 <input className="signInput" type="text" placeholder="Email" name="email" id="email" 
                     onChange={(e) => {setEmail(e.target.value);}}

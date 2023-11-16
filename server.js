@@ -17,6 +17,12 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/nutrition', (req, res) =>{
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/login', (req, res) =>{
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+    app.get('/register', (req, res) =>{
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;

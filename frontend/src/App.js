@@ -4,6 +4,7 @@ import './App.css';
 import './styles.css';
 import LoginPage from './pages/LoginPage';
 import NutritionPage from './pages/NutritionPage';
+import { LandingPage } from './pages/Landingpage';
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -19,7 +20,9 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LoginPage />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<LoginPage />} />
                 <Route path="/nutrition" element={<NutritionPage />} />
             </Routes>
         </BrowserRouter>

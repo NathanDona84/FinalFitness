@@ -265,6 +265,110 @@
     font-size: 16px !important;
   }
 
+  
+  /* landing page */
+
+  .landingBody {
+    background-image: url(../src/images/MuscleBuilding.jpg);
+    backdrop-filter: blur(5px);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 65px;
+    height: calc(100vh - 65px);
+    width: 100vw;
+    overflow-y: scroll;
+  }
+  .landingBody::-webkit-scrollbar {
+    display: none;
+  }
+
+  .banner {
+    background-color: #ff4b2b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    padding: 0 20px;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .left-content {
+    color: white;
+    font-weight: bold;
+    font-size: 36px;
+    font-family: 'Kanit';
+  }
+
+  .right-content {
+    margin-left: auto;
+  }
+
+  .content {
+    background-image: url(../src/images/finalfitnesspng.png);
+    background-size: cover;
+    background-position: -40px 0px;
+    background-repeat: no-repeat;
+    position: relative;
+    width: 550px;
+    height: 450px;
+    margin-left: calc((100vw - 550px) / 2);
+    margin-top: calc((100vh - 450px - 65px) / 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 60px;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  .bannerButton {
+    padding: 5px;
+    background-color: transparent;
+    font-size: 26px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5%;
+  }
+
+  .bannerButton:hover {
+    padding: 5px;
+    background-color: transparent;
+    font-weight: bold;
+    color: rgb(96, 93, 93);
+    border: none;
+    cursor: pointer;
+    border-radius: 5%;
+  }
+
+  .landingPageCreateAccountButton {
+    background-color: transparent;
+    color: rgb(244, 126, 53);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 26px;
+  }
+
+  .landingPageCreateAccountButton:hover {
+    background-color: transparent;
+    color: rgb(244, 59, 53);
+  }
+
+  .contentButtonContainer {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 5%;
+  }
+
+
   /* Nutrition Page */
 
   .mainContainer {

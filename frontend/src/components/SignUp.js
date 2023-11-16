@@ -55,7 +55,6 @@ export default function SignUp(props) {
         <div className="form-container sign-up-container">
             <div className="wasForm">
                 <h1>Create Account</h1>
-                <span style={{display: "inline-block"}}>or use your email for registration</span>
                 <label>First Name</label>
                 <input className="signInput" type="text" name="fname" placeholder="First Name" 
                     onChange={(e) => {setFirstName(e.target.value)}}
@@ -78,4 +77,3 @@ export default function SignUp(props) {
         </div>
     );
 }
-
