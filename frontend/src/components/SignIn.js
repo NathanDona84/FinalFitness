@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {buildPath} from '../App.js';
 import axios from 'axios';
 import "../styles.css";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignInForm(props) {
     const [message, setMessage] = useState("");
@@ -27,16 +28,17 @@ export default function SignInForm(props) {
                         "password": password
                     })
                 .then((response) => {
+                    setLogin(0);
                     if(response["data"]["id"] == -1){
                         setMessage(response["data"]["error"]);
-                        setLogin(0);
                     }
                     else{
-                        setLogin(0);
-                        let infoDup = Object.assign({}, response["data"]["info"]);
-                        let tracked = infoDup["tracked"];
-                        delete infoDup["tracked"];
-                        localStorage.setItem('user_data', JSON.stringify(infoDup));
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                        let decoded = jwtDecode(response["data"]["token"]["accessToken"], {complete: true});
+                        let info = Object.assign({}, decoded);
+                        let tracked = info["tracked"];
+                        delete info["tracked"];
+                        localStorage.setItem('user_data', JSON.stringify(info));
                         localStorage.setItem('tracked', JSON.stringify(tracked));
                         window.location.href = '/nutrition';
                     }

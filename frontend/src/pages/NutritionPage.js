@@ -389,7 +389,6 @@ export default function NutritionPage(props){
 
                 setAddMessage("");
                 setOpenPopup(0);
-                setTracked(newTracked);
                 axios
                     .post(buildPath("api/updateTracked"), {
                         "userId": userId,
@@ -408,6 +407,7 @@ export default function NutritionPage(props){
                             setTrackedStepsGoal("-1");
                         if(trackedWaterGoal == "")
                             setTrackedWaterGoal("-1");
+                        setTracked(newTracked);
                         localStorage.setItem('tracked', JSON.stringify(newTracked));
                         setAddSubmit(0);
                     })

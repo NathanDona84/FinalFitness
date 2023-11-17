@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const { error } = require('console');
 require('dotenv').config();
+const token = require("./createJWT.js");
 const PORT = process.env.PORT || 5000;
 const app = express();
 app.set('port', (process.env.PORT || 5000));
@@ -65,7 +66,7 @@ app.post('/api/login', async (req, res, next) => {
     if (results.length > 0) {
         results = results[0];
         if(results["verified"] == 1){
-            ret["info"] = results;
+            ret["token"] = token.createToken(results);
             id = 1;
         }
         else{
