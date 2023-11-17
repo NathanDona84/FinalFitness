@@ -86,7 +86,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function NavDrawer() {
+export default function NavDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -134,34 +134,39 @@ export default function NavDrawer() {
         </DrawerHeader>
         <Divider />
         <List sx={{pt: 0}}>
-          {['Nutrition', 'Exercise', 'Calendar'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}
-              onClick={()=>{
-                if(index == 0)
-                  window.location.href = "/nutrition";
-              }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 100,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+          {['Nutrition', 'Exercise', 'Calendar'].map((text, index) => {
+            let listStyle = {display: 'block'};
+            if((index == 0 && props.page == "nutrition") || (index == 1 && props.page == "exercise") || (index == 1 && props.page == "calendar"))
+              listStyle["backgroundColor"] = '#cccccc';
+
+            return (
+              <ListItem key={text} disablePadding sx={listStyle}
+                onClick={()=>{
+                  if(index == 0)
+                    window.location.href = "/nutrition";
                 }}
               >
-                <ListItemIcon
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                    ml: 1
+                    minHeight: 100,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  {index === 0 ? <FastfoodIcon fontSize='large'/> : index === 1 ? <FitnessCenterIcon fontSize='large'/> : <CalendarMonthIcon fontSize='large'/>}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, marginTop: "5px"}} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                      ml: 1
+                    }}
+                  >
+                    {index === 0 ? <FastfoodIcon fontSize='large'/> : index === 1 ? <FitnessCenterIcon fontSize='large'/> : <CalendarMonthIcon fontSize='large'/>}
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, marginTop: "5px"}} />
+                </ListItemButton>
+              </ListItem>
+          )})}
         </List>
         <Divider sx={{mt:"75px", mb:"-8px"}}/>
         <List>
@@ -190,7 +195,8 @@ export default function NavDrawer() {
                 onClick={() => {
                   localStorage.removeItem("user_data"); 
                   localStorage.removeItem("tracked");
-                  window.location.href = "/";
+                  localStorage.removeItem("accessToken");
+                  window.location.href = "/login";
                 }}
             >
                 <ListItemButton

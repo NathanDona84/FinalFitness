@@ -7,13 +7,13 @@ export function LandingPage() {
             <div className="banner">
                 <div className="left-content">Final Fitness</div>
                 <div className="right-content">
-                    <Link to={`/login`} state={{ pageType: "signIn"}} className='bannerButton'>Login</Link>
+                    <Link to={`/login`} className='bannerButton'>Login</Link>
                 </div>
             </div>
             <div className='landingBody'>
                 <div className="content">
                     <div className='contentButtonContainer'>
-                        <Link to={`/register`} state={{ pageType: "signUp" }} className='landingPageCreateAccountButton'>Click Here To Start Your Journey</Link>
+                        <Link to={`/register`} className='landingPageCreateAccountButton'>Click Here To Start Your Journey</Link>
                     </div>
                 </div>
             </div>

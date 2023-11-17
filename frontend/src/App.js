@@ -21,8 +21,8 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage pageType="signIn"/>} />
+                <Route path="/register" element={<LoginPage pageType="signUp"/>} />
                 <Route path="/nutrition" element={<NutritionPage />} />
             </Routes>
         </BrowserRouter>

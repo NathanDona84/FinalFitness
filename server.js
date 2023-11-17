@@ -156,74 +156,111 @@ app.get('/api/verify', async (req, res, next) => {
 });
 
 app.post('/api/fetchConsumed', async (req, res, next) => {
-    const { userId, date } = req.body;
+    const { userId, date, accessToken } = req.body;
     let error = "";
     let ret = {};
-    try {
-        const db = client.db("FinalFitness");
-        let temp = await db.collection('consumed').find({"userId": userId}).toArray();
-        if(temp.length == 0){
-            error = 'could not find consumed object';
-        }
-        else{
-            temp = temp[0];
-            if(!Object.keys(temp["dates"]).includes(date)){
-                temp["dates"][date]=[];
-                await db.collection("consumed").updateOne(
-                    {"userId": userId},
-                    {$set: {"dates": temp["dates"]}}
-                )
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try {
+            const db = client.db("FinalFitness");
+            let temp = await db.collection('consumed').find({"userId": userId}).toArray();
+            if(temp.length == 0){
+                error = 'could not find consumed object';
             }
-            ret["info"] = temp;
+            else{
+                temp = temp[0];
+                if(!Object.keys(temp["dates"]).includes(date)){
+                    temp["dates"][date]=[];
+                    await db.collection("consumed").updateOne(
+                        {"userId": userId},
+                        {$set: {"dates": temp["dates"]}}
+                    )
+                }
+                ret["info"] = temp;
+            }
         }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    try{
+        ret["token"] = token.refresh(accessToken);
     }
     catch(e){
         error = e.toString();
     }
-    //console.log(newUser);
     ret["error"] = error;
     res.status(200).json(ret);
 });
 
 app.post('/api/addConsumedItem', async (req, res, next) => {
-    const { userId, date, item } = req.body;
+    const { userId, date, item, accessToken } = req.body;
     let field = "dates."+date;
     let error = "";
-    let id = 1;
     let info = {};
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("consumed").updateOne(
+                {"userId": userId},
+                {$push: {[field]: item}}
+            )
+            info = await db.collection("consumed").find({"userId": userId}).toArray();
+            info = info[0];
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
     try{
-        const db = client.db("FinalFitness");
-        await db.collection("consumed").updateOne(
-            {"userId": userId},
-            {$push: {[field]: item}}
-        )
-        info = await db.collection("consumed").find({"userId": userId}).toArray();
-        info = info[0];
+        ret["token"] = token.refresh(accessToken);
     }
     catch(e){
         error = e.toString();
-        id = -1;
     }
-    let ret = {"id": id, "error": error, "info": info};
+    ret["error"] = error;
+    ret["info"] = info;
     res.status(200).json(ret);
 });
 
 app.post('/api/updateTracked', async (req, res, next) => {
-    const { userId, tracked } = req.body;
+    const { userId, tracked, accessToken } = req.body;
     let error = "";
-    let id = 1;
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("users").updateOne(
+                {"id": userId},
+                {$set: {"tracked": tracked}}
+            )
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
     try{
-        const db = client.db("FinalFitness");
-        await db.collection("users").updateOne(
-            {"id": userId},
-            {$set: {"tracked": tracked}}
-        )
+        ret["token"] = token.refresh(accessToken);
     }
     catch(e){
         error = e.toString();
-        id = -1;
     }
-    let ret = {"id": id, "error": error};
+    ret["error"] = error;
     res.status(200).json(ret);
 });
 

@@ -16,7 +16,7 @@ export default function LoginPage(props) {
   };
 
   useEffect(() => {
-    setType(data.state.pageType);
+    setType(props.pageType);
   }, []);
 
   const containerClass = "container " + (type === "signUp" ? "right-panel-active" : "");

@@ -31,6 +31,5 @@ exports.isExpired = function(token){
 
 exports.refresh = function(token){
   let ud = jwt.decode(token, {complete: true});
-  let payload = ud.payload;
-  return _createToken(payload);
+  return _createToken(ud);
 }

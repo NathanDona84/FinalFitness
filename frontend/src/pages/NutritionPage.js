@@ -86,6 +86,7 @@ export default function NutritionPage(props){
     const [trackedProteinGoal, setTrackedProteinGoal] = useState("-1");
     const [trackedStepsGoal, setTrackedStepsGoal] = useState("-1");
     const [trackedWaterGoal, setTrackedWaterGoal] = useState("-1");
+    const [mainErrorMessage, setMainErrorMessage] = useState("");
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
@@ -145,11 +146,17 @@ export default function NutritionPage(props){
             .post(buildPath('api/fetchConsumed'), 
                 {
                     "userId": userIdTemp,
-                    "date": (year+month+day)
+                    "date": (year+month+day),
+                    "accessToken": localStorage.getItem('accessToken')
                 })
             .then((response) => {
-                if(response["data"]["error"] == "")
-                    setConsumed(response["data"]["info"])
+                if(response["data"]["error"] == ""){
+                    setConsumed(response["data"]["info"]);
+                    localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                }
+                else{
+                    setMainErrorMessage(response["data"]["error"]);
+                }
             })
     }, []);
 
@@ -174,11 +181,17 @@ export default function NutritionPage(props){
                 .post(buildPath('api/fetchConsumed'), 
                     {
                         "userId": userId,
-                        "date": date
+                        "date": date,
+                        "accessToken": localStorage.getItem('accessToken')
                     })
                 .then((response) => {
-                    if(response["data"]["error"] == "")
-                        setConsumed(response["data"]["info"])
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
                 })
         }
     }, [date]);
@@ -268,10 +281,17 @@ export default function NutritionPage(props){
                         "fat": addFat == "" ? "-1" : addFat,
                         "protein": addProtein == "" ? "-1" : addProtein,
                         "carbs": addCarbs == "" ? "-1" : addCarbs
-                    }
+                    },
+                    "accessToken": localStorage.getItem('accessToken')
                 })
                 .then((response)=>{
-                    setConsumed(response["data"]["info"]);
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
                     setAddName("");
                     setAddCalories("-1");
                     setAddFat("-1");
@@ -305,10 +325,17 @@ export default function NutritionPage(props){
                         "time": time,
                         "type": "water",
                         "amount": addAmount
-                    }
+                    },
+                    "accessToken": localStorage.getItem('accessToken')
                 })
                 .then((response)=>{
-                    setConsumed(response["data"]["info"]);
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
                     setAddAmount("");
                     setAddSubmit(0);
                 })
@@ -338,10 +365,17 @@ export default function NutritionPage(props){
                         "time": time,
                         "type": "steps",
                         "amount": addAmount
-                    }
+                    },
+                    "accessToken": localStorage.getItem('accessToken')
                 })
                 .then((response)=>{
-                    setConsumed(response["data"]["info"]);
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
                     setAddAmount("");
                     setAddSubmit(0);
                 })
@@ -392,7 +426,8 @@ export default function NutritionPage(props){
                 axios
                     .post(buildPath("api/updateTracked"), {
                         "userId": userId,
-                        "tracked": newTracked
+                        "tracked": newTracked,
+                        "accessToken": localStorage.getItem('accessToken')
                     })
                     .then((response)=>{
                         if(trackedCaloriesGoal == "")
@@ -407,15 +442,30 @@ export default function NutritionPage(props){
                             setTrackedStepsGoal("-1");
                         if(trackedWaterGoal == "")
                             setTrackedWaterGoal("-1");
-                        setTracked(newTracked);
-                        localStorage.setItem('tracked', JSON.stringify(newTracked));
+
+                        if(response["data"]["error"] == ""){
+                            setTracked(newTracked);
+                            localStorage.setItem('tracked', JSON.stringify(newTracked));
+                            localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                        }
+                        else{
+                            setMainErrorMessage(response["data"]["error"]);
+                        }
                         setAddSubmit(0);
                     })
             }
         }
     }, [addSubmit]);
 
-
+    if(mainErrorMessage != "")
+        return(
+            <div>
+                <NavDrawer page='nutrition'/>
+                <div className='mainContainer'>
+                    {mainErrorMessage}
+                </div>
+            </div>
+        );
 
     let popOverBackgroundStyle={};
     if(openPopup == 0)
@@ -428,7 +478,7 @@ export default function NutritionPage(props){
     popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 600px) / 2)", top: "calc((100vh - 600px) / 2)"};
     return (
         <div>
-            <NavDrawer />
+            <NavDrawer page='nutrition'/>
             <div className='mainContainer'>
                 <div className='addNutritionContainer'>
                         <AddNutritionMenu onSelect={(popNum) => {setOpenPopup(popNum)}}/>
