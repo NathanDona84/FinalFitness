@@ -123,12 +123,12 @@ app.post('/api/register', async (req, res, next) => {
             }
             console.log(mailOptions);
             smtpTransport.sendMail(mailOptions, function(e, response){
-            if(e){
-                inserted = -1;
-                error = e;
-            }else{
-                console.log("Message sent: " + response.message);
-                }
+                if(e){
+                    inserted = -1;
+                    error = e;
+                }else{
+                    console.log("Message sent: " + response.message);
+                    }
             });
         }
     }
@@ -185,14 +185,15 @@ app.post('/api/fetchConsumed', async (req, res, next) => {
         catch(e){
             error = e.toString();
         }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
     }
 
-    try{
-        ret["token"] = token.refresh(accessToken);
-    }
-    catch(e){
-        error = e.toString();
-    }
     ret["error"] = error;
     res.status(200).json(ret);
 });
@@ -220,14 +221,15 @@ app.post('/api/addConsumedItem', async (req, res, next) => {
         catch(e){
             error = e.toString();
         }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
     }
 
-    try{
-        ret["token"] = token.refresh(accessToken);
-    }
-    catch(e){
-        error = e.toString();
-    }
     ret["error"] = error;
     ret["info"] = info;
     res.status(200).json(ret);
@@ -252,14 +254,15 @@ app.post('/api/updateTracked', async (req, res, next) => {
         catch(e){
             error = e.toString();
         }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
     }
 
-    try{
-        ret["token"] = token.refresh(accessToken);
-    }
-    catch(e){
-        error = e.toString();
-    }
     ret["error"] = error;
     res.status(200).json(ret);
 });

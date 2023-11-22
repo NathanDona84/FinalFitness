@@ -16,7 +16,6 @@ export function buildPath(route){
 
 
 function App() {
-    const [userId, setUserId] = useState(-1);
     return (
         <BrowserRouter>
             <Routes>
