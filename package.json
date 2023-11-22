@@ -16,7 +16,9 @@
         "express": "^4.18.2",
         "git": "^0.1.5",
         "jsonwebtoken": "^9.0.2",
+        "jwt-decode": "^4.0.0",
         "mongodb": "^6.2.0",
+        "mongoose-int32": "^0.6.0",
         "nodemailer": "^6.9.7",
         "react-router": "^6.17.0"
     }

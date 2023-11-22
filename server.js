@@ -24,6 +24,9 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/register', (req, res) =>{
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/settings', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;
@@ -258,6 +261,41 @@ app.post('/api/updateTracked', async (req, res, next) => {
         ret["token"] = token.refresh(accessToken);
     }
     catch(e){
+        error = e.toString();
+    }
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+app.post('/api/updateSettings', async (req, res, next) => {
+    const { userId, firstName,lastName, email, password, accessToken } = req.body;
+    let error = "";
+    let ret = {};
+
+    if (token.isExpired(accessToken)) {
+        error = "token is expired";
+    }
+    else {
+        try {
+            const db = client.db("FinalFitness");
+            await db.collection("users").updateOne(
+                { "id": userId },
+                { $set: { "firstName": firstName,
+                          "lastName" : lastName,
+                          "email" : email,
+                          "password" : password,
+                        } }
+            )
+        }
+        catch (e) {
+            error = e.toString();
+        }
+    }
+
+    try {
+        ret["token"] = token.refresh(accessToken);
+    }
+    catch (e) {
         error = e.toString();
     }
     ret["error"] = error;

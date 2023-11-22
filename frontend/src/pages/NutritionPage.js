@@ -90,6 +90,7 @@ export default function NutritionPage(props){
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
+        console.log(_ud);
         let ud = JSON.parse(_ud);
         let userIdTemp = ud["id"];
         setUserId(userIdTemp);
@@ -176,7 +177,6 @@ export default function NutritionPage(props){
                 suffix = "rd";
             let dateObj = new Date(Number(year), Number(month)-1, Number(day));
             setDisplayDate(numToDay[dateObj.getDay()]+", "+numToMonth[dateObj.getMonth()]+" "+dateObj.getDate()+suffix);
-
             axios
                 .post(buildPath('api/fetchConsumed'), 
                     {

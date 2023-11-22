@@ -5,6 +5,7 @@ import './styles.css';
 import LoginPage from './pages/LoginPage';
 import NutritionPage from './pages/NutritionPage';
 import { LandingPage } from './pages/Landingpage';
+import SettingsPage from "./pages/Settingspage";
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/login" element={<LoginPage pageType="signIn"/>} />
                 <Route path="/register" element={<LoginPage pageType="signUp"/>} />
                 <Route path="/nutrition" element={<NutritionPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
             </Routes>
         </BrowserRouter>
     );

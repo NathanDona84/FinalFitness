@@ -369,6 +369,63 @@
   }
 
 
+  /* Settings Page */
+
+    .settingsContainer {
+      box-sizing: border-box;
+        height: calc(100vh - 66px);
+        width: calc(100vw - 90px);
+        position: absolute;
+        left: 89px;
+        top: 65px;
+        padding: 1vw;
+    }
+
+    .settingsContainer {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .settingsForm {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    .settingsButton {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .password-fields {
+      display: none;
+    }
+    .settingsChangePasswordButton {
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-style: none;
+      color: rgb(53, 72, 244);
+      background-color: white;
+      cursor: pointer;
+    }
   /* Nutrition Page */
 
   .mainContainer {
