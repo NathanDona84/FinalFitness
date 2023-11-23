@@ -90,7 +90,6 @@ export default function NutritionPage(props){
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
-        console.log(_ud);
         let ud = JSON.parse(_ud);
         let userIdTemp = ud["id"];
         setUserId(userIdTemp);

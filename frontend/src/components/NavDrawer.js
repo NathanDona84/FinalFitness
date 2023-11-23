@@ -136,7 +136,7 @@ export default function NavDrawer(props) {
         <List sx={{pt: 0}}>
           {['Nutrition', 'Exercise', 'Calendar'].map((text, index) => {
             let listStyle = {display: 'block'};
-            if((index == 0 && props.page == "nutrition") || (index == 1 && props.page == "exercise") || (index == 1 && props.page == "calendar"))
+            if((index == 0 && props.page == "nutrition") || (index == 1 && props.page == "exercise") || (index == 2 && props.page == "calendar"))
               listStyle["backgroundColor"] = '#cccccc';
 
             return (
@@ -170,7 +170,11 @@ export default function NavDrawer(props) {
         </List>
         <Divider sx={{mt:"75px", mb:"-8px"}}/>
         <List>
-            <ListItem key={"Settings"} disablePadding sx={{ display: 'block' }}>
+            <ListItem key={"Settings"} disablePadding sx={{ display: 'block' }}
+              onClick={() => {
+                window.location.href = '/settings';
+              }}
+            >
                 <ListItemButton
                     sx={{
                         minHeight: 100,
