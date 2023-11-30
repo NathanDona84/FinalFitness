@@ -113,7 +113,7 @@ export default function SettingsPage() {
                         "userId": userId,
                         "firstName": firstName,
                         "lastName": lastName,
-                        "password": password,
+                        "password": newPassword,
                         "accessToken": localStorage.getItem('accessToken')
                     })
                 .then((response) => {
@@ -135,7 +135,7 @@ export default function SettingsPage() {
                     "userId": userId,
                     "firstName": firstName,
                     "lastName": lastName,
-                    "password": newPassword,
+                    "password": password,
                     "accessToken": localStorage.getItem('accessToken')
                 })
             .then((response) => {
@@ -153,58 +153,60 @@ export default function SettingsPage() {
 return(
     <div>
         <NavDrawer page="Settings"/>
-        <div class="settingsContainer">
-            <h2>User Settings</h2>
-            <form id="settingsForm">
-                <div className="settingsForm">
-                    <label htmlFor="firstName">First Name:</label>
-                    <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                </div>
-
-                <div className="settingsForm">
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                </div>
-
-                <div className="settingsForm">
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div>
-                    <button type = "button" className="settingsChangePasswordButton" onClick={togglePasswordFields}>
-                        {showPasswordFields ? 'Hide Password Fields' : 'Click Here to Change Password'}
-                    </button>
-
-                    {showPasswordFields && (
-                        <div>
-                            <div className="form-group">
-                                <label htmlFor="prevPassword">Previous Password:</label>
-                                <input type="password" id="prevPassword" value={prevPassword} onChange={(e) => setPrevPassword(e.target.value)} />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="newPassword">New Password:</label>
-                                <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="confirmNewPassword">Confirm New Password:</label>
-                                <input
-                                    type="password"
-                                    id="confirmNewPassword"
-                                    value={confirmNewPassword}
-                                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                />
-                            </div>
-                            
-                        </div>
-                    )} 
-                </div>
-                    <div>
-                        <button type= "button" onClick={updateInfo}>Save changes</button>
+        <div className="mainContainer">
+            <div className="settingsContainer">
+                <h2>User Settings</h2>
+                <form id="settingsForm">
+                    <div className="settingsForm">
+                        <label htmlFor="firstName">First Name:</label>
+                        <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                     </div>
-                    <span>{updateResultMessage}</span>
-            </form>
+
+                    <div className="settingsForm">
+                        <label htmlFor="lastName">Last Name:</label>
+                        <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    </div>
+
+                    <div className="settingsForm">
+                        <label htmlFor="email">Email:</label>
+                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div>
+                        <button type = "button" className="settingsChangePasswordButton" onClick={togglePasswordFields}>
+                            {showPasswordFields ? 'Hide Password Fields' : 'Click Here to Change Password'}
+                        </button>
+
+                        {showPasswordFields && (
+                            <div>
+                                <div className="form-group">
+                                    <label htmlFor="prevPassword">Previous Password:</label>
+                                    <input type="password" id="prevPassword" value={prevPassword} onChange={(e) => setPrevPassword(e.target.value)} />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="newPassword">New Password:</label>
+                                    <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="confirmNewPassword">Confirm New Password:</label>
+                                    <input
+                                        type="password"
+                                        id="confirmNewPassword"
+                                        value={confirmNewPassword}
+                                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                    />
+                                </div>
+                                
+                            </div>
+                        )} 
+                    </div>
+                        <div>
+                            <button type= "button" onClick={updateInfo}>Save changes</button>
+                        </div>
+                        <span>{updateResultMessage}</span>
+                </form>
+            </div>
         </div>
     </div>
 )
