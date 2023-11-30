@@ -113,12 +113,14 @@ export default function SettingsPage() {
                         "userId": userId,
                         "firstName": firstName,
                         "lastName": lastName,
+                        "email": email,
                         "password": newPassword,
                         "accessToken": localStorage.getItem('accessToken')
                     })
                 .then((response) => {
                     if (response["data"]["error"] == "") {
                         localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                        setUpdateResultMessage("Account Updated!")
                     }
                     else {
                         setUpdateResultMessage(response["data"]["error"]);
@@ -135,12 +137,15 @@ export default function SettingsPage() {
                     "userId": userId,
                     "firstName": firstName,
                     "lastName": lastName,
+                    "email": email,
                     "password": password,
                     "accessToken": localStorage.getItem('accessToken')
                 })
             .then((response) => {
                 if (response["data"]["error"] == "") {
                     localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    setUpdateResultMessage("Account Updated!");
+                    
                 }
                 else {
                     setUpdateResultMessage(response["data"]["error"]);
@@ -202,7 +207,7 @@ return(
                         )} 
                     </div>
                         <div>
-                            <button type= "button" onClick={updateInfo}>Save changes</button>
+                            <button type= "button" className="settingsButton" onClick={updateInfo}>Save changes</button>
                         </div>
                         <span>{updateResultMessage}</span>
                 </form>

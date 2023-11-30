@@ -373,7 +373,7 @@
 
     .settingsContainer {
       box-sizing: border-box;
-        height: calc(100vh - 66px);
+        height: calc(80vh - 66px);
         width: calc(100vw - 90px);
         position: absolute;
         left: 89px;
@@ -407,7 +407,7 @@
     }
 
     .settingsButton {
-      background-color: #4caf50;
+      background-color: #ff4b2b;
       color: #fff;
       padding: 10px 15px;
       border: none;
