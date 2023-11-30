@@ -11,6 +11,8 @@ export default function SignUp(props) {
     const [lastName, setLastName] = useState("");
     const [register, setRegister] = useState(0);
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     function validatePassword(password) {
         // Individual checks for uppercase, lowercase, number, and special character
         const hasUppercase = /[A-Z]/.test(password);
@@ -49,6 +51,10 @@ export default function SignUp(props) {
         }
         else if(email == "" && register == 1){
             setMessage("Email Cannot Be Empty");
+            setRegister(0);
+        }
+        else if(email != "" && register == 1 && !emailRegex.test(email)){
+            setMessage("Enter a valid Email");
             setRegister(0);
         }
         else if(password == "" && register == 1){
