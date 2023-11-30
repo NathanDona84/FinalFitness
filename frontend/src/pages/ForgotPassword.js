@@ -36,7 +36,7 @@ export default function ForgotPassword() {
             .post(buildPath('api/forgotPassword'),
             {
                 "email": email,
-                "password": tempPassword
+                "tempPassword": tempPassword
             })
             .then((response) => {
                 if (response["data"]["error"] == "") {

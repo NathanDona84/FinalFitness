@@ -27,6 +27,9 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/settings', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/forgotPassword', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;
@@ -86,9 +89,12 @@ app.post('/api/login', async (req, res, next) => {
 
 app.post('/api/forgotPassword', async (req, res, next) => {
     //incoming: email, temp_password
-    const {email, temp_password} = req.body;
+    const { email, tempPassword } = req.body;
+    console.log(req.body);
+    console.log(tempPassword);
     let error = "";
     let reset = 1;
+    let ret = {}
 
     try {
         const db = client.db("FinalFitness");
@@ -101,7 +107,7 @@ app.post('/api/forgotPassword', async (req, res, next) => {
                 { "email": email },
                 {
                     $set: {
-                        "password": temp_password,
+                        "password": tempPassword,
                     }
                 }
             )
@@ -112,7 +118,7 @@ app.post('/api/forgotPassword', async (req, res, next) => {
         error = e.toString();
     }
     ret["error"] = error;
-    let ret = { reset: reset, error: error };
+    ret = { reset: reset, error: error };
     res.status(200).json(ret);
 })
 
