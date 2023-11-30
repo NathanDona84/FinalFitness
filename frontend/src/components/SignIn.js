@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {buildPath} from '../App.js';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import "../styles.css";
 import { jwtDecode } from "jwt-decode";
@@ -58,7 +59,7 @@ export default function SignInForm(props) {
                 <input className="signInput" id="password" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
-                <a href="#">Forgot your password?</a>
+                <Link to="/forgot_password">Forgot your password?</Link>
                 <button className="signInButton" onClick={() => {setLogin(1)}}>Sign In</button>
                 <span id="loginResult">{message}</span>
             </div>
