@@ -103,6 +103,7 @@ app.post('/api/forgotPassword', async (req, res, next) => {
             error = "Email address is not registered!"
         }
         else{
+            
             await db.collection("users").updateOne(
                 { "email": email },
                 {
@@ -111,6 +112,31 @@ app.post('/api/forgotPassword', async (req, res, next) => {
                     }
                 }
             )
+            let smtpTransport = nodemailer.createTransport({
+                host: 'smtp.zoho.com',
+                secure: true,
+                auth: {
+                    user: process.env.NODEMAILER_EMAIL,
+                    pass: process.env.NODEMAILER_PASSWORD
+                }
+            });
+
+            let mailOptions, host;
+            host = req.get('host');
+
+            mailOptions = {
+                to: email,
+                from: process.env.NODEMAILER_EMAIL,
+                subject: "Final Fitness Temporary Password: " + tempPassword,
+            }
+            smtpTransport.sendMail(mailOptions, function (e, response) {
+                if (e) {
+                    reset = -1;
+                    error = e;
+                } else {
+                    console.log("Message sent: " + response.message);
+                }
+            });
         }
     }
     catch(e){
