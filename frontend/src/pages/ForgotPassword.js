@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
-
+import { buildPath } from '../App.js';
+import axios from 'axios';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -31,8 +32,22 @@ export default function ForgotPassword() {
     const handleResetPassword = () => {
 
         const tempPassword = generateRandomPassword();
-
-        setMessage(`Temporary password: ${tempPassword}`);
+        axios
+            .post(buildPath('api/forgotPassword'),
+            {
+                "email": email,
+                "password": tempPassword
+            })
+            .then((response) => {
+                if (response["data"]["error"] == "") {
+                   
+                    setMessage("Temporary Password has been sent to your Email");
+                }
+                else {
+                    setMessage(response["data"]["error"]);
+                }
+            })
+        console.log(`Temporary password: ${tempPassword}`);
     };
 
     return (

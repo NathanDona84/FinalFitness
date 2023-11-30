@@ -84,6 +84,38 @@ app.post('/api/login', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+app.post('/api/forgotPassword', async (req, res, next) => {
+    //incoming: email, temp_password
+    const {email, temp_password} = req.body;
+    let error = "";
+    let reset = 1;
+
+    try {
+        const db = client.db("FinalFitness");
+        let temp = await db.collection('users').find({ "email": email }).toArray();
+        if(temp.length < 1){
+            error = "Email address is not registered!"
+        }
+        else{
+            await db.collection("users").updateOne(
+                { "email": email },
+                {
+                    $set: {
+                        "password": temp_password,
+                    }
+                }
+            )
+        }
+    }
+    catch(e){
+        inserted = -1;
+        error = e.toString();
+    }
+    ret["error"] = error;
+    let ret = { reset: reset, error: error };
+    res.status(200).json(ret);
+})
+
 app.post('/api/register', async (req, res, next) => {
     // incoming: UserID, Password, FirstName, LastName
     // outgoing: error
