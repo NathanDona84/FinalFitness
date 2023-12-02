@@ -105,6 +105,8 @@ export default function NutritionPage(props){
     const [updateMessage, setUpdateMessage] = useState("");
     const [updateSubmit, setUpdateSubmit] = useState(0);
 
+    const [deleteIndex, setDeleteIndex] = useState(-1);
+
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
         let ud = JSON.parse(_ud);
@@ -515,6 +517,7 @@ export default function NutritionPage(props){
         if(updateSubmit == 1 && updatedName == ""){
             setUpdateMessage("Name Cannot Be Empty");
             setUpdateSubmit(0);
+            setUpdateIndex(-1);
         }
         else if(updateSubmit == 1){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -549,12 +552,14 @@ export default function NutritionPage(props){
                         setMainErrorMessage(response["data"]["error"]);
                     }
                     setUpdateSubmit(0);
+                    setUpdateIndex(-1);
                 })
         }
 
         if(updateSubmit == 2 && updatedAmount == ""){
             setUpdateMessage("Amount Cannot Be Empty");
             setUpdateSubmit(0);
+            setUpdateIndex(-1);
         }
         else if(updateSubmit == 2){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -580,12 +585,14 @@ export default function NutritionPage(props){
                         setMainErrorMessage(response["data"]["error"]);
                     }
                     setUpdateSubmit(0);
+                    setUpdateIndex(-1);
                 })
         }
 
         if(updateSubmit == 3 && updatedAmount == ""){
             setUpdateMessage("Amount Cannot Be Empty");
             setUpdateSubmit(0);
+            setUpdateIndex(-1);
         }
         else if(updateSubmit == 3){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -611,9 +618,34 @@ export default function NutritionPage(props){
                         setMainErrorMessage(response["data"]["error"]);
                     }
                     setUpdateSubmit(0);
+                    setUpdateIndex(-1);
                 })
         }
     }, [updateSubmit]);
+
+    useEffect(() => {
+        if(deleteIndex != -1){
+            let updatedConsumedToday = consumedTodayLog.slice(0, deleteIndex).concat(consumedTodayLog.slice(deleteIndex+1));
+            updatedConsumedToday = updatedConsumedToday.reverse();
+            axios
+                .post(buildPath("api/deleteConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": updatedConsumedToday,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+                .then((response)=>{
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
+                    setDeleteIndex(-1);
+                })
+        }
+    }, [deleteIndex]);
 
 
     if(mainErrorMessage != "")
@@ -811,7 +843,11 @@ export default function NutritionPage(props){
                                                                 setOpenUpdatePopup(1);
                                                             }}
                                                         />
-                                                        <DeleteIcon className='deleteIcon' fontSize='medium'/>
+                                                        <DeleteIcon className='deleteIcon' fontSize='medium'
+                                                            onClick={() => {
+                                                                setDeleteIndex(index);
+                                                            }}
+                                                        />
                                                     </span>
                                                 </td>
                                             </tr>
@@ -851,7 +887,11 @@ export default function NutritionPage(props){
                                                                     setOpenUpdatePopup(3);
                                                             }}
                                                         />
-                                                        <DeleteIcon className='deleteIcon' fontSize='medium'/>
+                                                        <DeleteIcon className='deleteIcon' fontSize='medium'
+                                                            onClick={() => {
+                                                                setDeleteIndex(index);
+                                                            }}
+                                                        />
                                                     </span>
                                                 </td>
                                             </tr>
