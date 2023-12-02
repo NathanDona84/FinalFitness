@@ -235,6 +235,44 @@ app.post('/api/addConsumedItem', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+app.post('/api/updateConsumedItem', async (req, res, next) => {
+    const { userId, date, item, accessToken } = req.body;
+    let field = "dates."+date;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("consumed").updateOne(
+                {"userId": userId},
+                {$set: {[field]: item}}
+            )
+            info = await db.collection("consumed").find({"userId": userId}).toArray();
+            info = info[0];
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    ret["info"] = info;
+    res.status(200).json(ret);
+});
+
+
 app.post('/api/updateTracked', async (req, res, next) => {
     const { userId, tracked, accessToken } = req.body;
     let error = "";

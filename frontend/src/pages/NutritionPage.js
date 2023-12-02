@@ -14,6 +14,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs';
 import AddNutritionMenu from '../components/AddNutritionMenu.js';
 import Popover from '@mui/material/Popover';
+import UpdateIcon from '@mui/icons-material/Update';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function LinearProgressWithLabel(props) {
     let value = "";
@@ -54,6 +56,7 @@ export default function NutritionPage(props){
     const [consumed, setConsumed] = useState({});
     const [date, setDate] = useState("");
     const [displayDate, setDisplayDate] = useState("");
+
     const [curCalories, setCurCalories] = useState(0);
     const [curCarbs, setCurCarbs] = useState(0);
     const [curFat, setCurFat] = useState(0);
@@ -61,11 +64,13 @@ export default function NutritionPage(props){
     const [curSteps, setCurSteps] = useState(0);
     const [curWater, setCurWater] = useState(0);
     const [consumedTodayLog, setConsumedTodayLog] = useState([]);
+
     const [openPopup, setOpenPopup] = useState(0);
     const [tracked, setTracked] = useState({});
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userId, setUserId] = useState(null);
+
     const [addName, setAddName] = useState("");
     const [addSubmit, setAddSubmit] = useState(0);
     const [addCalories, setAddCalories] = useState("-1");
@@ -74,6 +79,7 @@ export default function NutritionPage(props){
     const [addProtein, setAddProtein] = useState("-1");
     const [addAmount, setAddAmount] = useState("");
     const [addMessage, setAddMessage] = useState("");
+    
     const [trackedCalories, setTrackedCalories] = useState(null);
     const [trackedCarbs, setTrackedCarbs] = useState(null);
     const [trackedFat, setTrackedFat] = useState(null);
@@ -87,6 +93,17 @@ export default function NutritionPage(props){
     const [trackedStepsGoal, setTrackedStepsGoal] = useState("-1");
     const [trackedWaterGoal, setTrackedWaterGoal] = useState("-1");
     const [mainErrorMessage, setMainErrorMessage] = useState("");
+
+    const [openUpdatePopup, setOpenUpdatePopup] = useState(0);
+    const [updateIndex, setUpdateIndex] = useState(-1);
+    const [updatedName, setUpdatedName] = useState("");
+    const [updatedCalories, setUpdatedCalories] = useState("");
+    const [updatedCarbs, setUpdatedCarbs] = useState("");
+    const [updatedFat, setUpdatedFat] = useState("");
+    const [updatedProtein, setUpdatedProtein] = useState("");
+    const [updatedAmount, setUpdatedAmount] = useState("");
+    const [updateMessage, setUpdateMessage] = useState("");
+    const [updateSubmit, setUpdateSubmit] = useState(0);
 
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
@@ -139,6 +156,8 @@ export default function NutritionPage(props){
             suffix = "rd";
         if(day.length == 1)
             day = "0"+day;
+        if(month.length == 1)
+            month = "0"+month;
         setDate(year+month+day);
         setDisplayDate(numToDay[temp.getDay()]+", "+numToMonth[temp.getMonth()]+" "+temp.getDate()+suffix);
 
@@ -167,6 +186,8 @@ export default function NutritionPage(props){
             let day = date.slice(6);
             if(day.slice(0, 1) == "0")
                 day = day.slice(1);
+            if(month.slice(0, 1) == "0")
+                month = month.slice(1);
             let suffix = "th";
             if(day == "1")
                 suffix = "st";
@@ -228,23 +249,7 @@ export default function NutritionPage(props){
             setCurWater(water);
             
             if(consumedToday.length > 0){
-                let consumedTodayDup = consumedToday.slice();
-                let consumedTodayOrdered = [];
-                let latest = consumedTodayDup[0];
-                let latestIndex = 0;
-                let length = consumedTodayDup.length;
-                for (let i=0; i<length; i++){
-                    consumedTodayDup.forEach((element, index) => {
-                        if(element["time"] > latest["time"]){
-                            latest = element;
-                            latestIndex = index;
-                        }
-                    });
-                    consumedTodayOrdered.push(latest);
-                    consumedTodayDup.splice(latestIndex, 1);
-                    latest = consumedTodayDup[0];
-                }
-                setConsumedTodayLog(consumedTodayOrdered);
+                setConsumedTodayLog(consumedToday.reverse());
             }
             else{
                 setConsumedTodayLog([]);
@@ -267,6 +272,18 @@ export default function NutritionPage(props){
             if(minutes < 10)
                 minutes = "0"+minutes;
             time = ""+hours+""+minutes;
+
+            let year = temp.getFullYear().toString();
+            let month = (temp.getMonth() + 1).toString();
+            let day = temp.getDate().toString();
+            if(day.length == 1)
+                day = "0"+day;
+            if(month.length == 1)
+                month = "0"+month;
+            let curDate = year+month+day;
+            if(date != curDate)
+                time = "-";
+
             setAddMessage("");
             setOpenPopup(0);
             axios
@@ -315,6 +332,18 @@ export default function NutritionPage(props){
             if(minutes < 10)
                 minutes = "0"+minutes;
             time = ""+hours+""+minutes;
+
+            let year = temp.getFullYear().toString();
+            let month = (temp.getMonth() + 1).toString();
+            let day = temp.getDate().toString();
+            if(day.length == 1)
+                day = "0"+day;
+            if(month.length == 1)
+                month = "0"+month;
+            let curDate = year+month+day;
+            if(date != curDate)
+                time = "-";
+
             setAddMessage("");
             setOpenPopup(0);
             axios
@@ -355,6 +384,18 @@ export default function NutritionPage(props){
             if(minutes < 10)
                 minutes = "0"+minutes;
             time = ""+hours+""+minutes;
+
+            let year = temp.getFullYear().toString();
+            let month = (temp.getMonth() + 1).toString();
+            let day = temp.getDate().toString();
+            if(day.length == 1)
+                day = "0"+day;
+            if(month.length == 1)
+                month = "0"+month;
+            let curDate = year+month+day;
+            if(date != curDate)
+                time = "-";
+
             setAddMessage("");
             setOpenPopup(0);
             axios
@@ -457,6 +498,124 @@ export default function NutritionPage(props){
         }
     }, [addSubmit]);
 
+    useEffect(() => {
+        if(openUpdatePopup == 1){
+            setUpdatedName(consumedTodayLog[updateIndex]["name"]);
+            setUpdatedCalories(consumedTodayLog[updateIndex]["calories"]);
+            setUpdatedCarbs(consumedTodayLog[updateIndex]["carbs"]);
+            setUpdatedFat(consumedTodayLog[updateIndex]["fat"]);
+            setUpdatedProtein(consumedTodayLog[updateIndex]["protein"]);
+        }
+        else if(openUpdatePopup == 2 || openUpdatePopup == 3){
+            setUpdatedAmount(consumedTodayLog[updateIndex]["amount"]);
+        }
+    }, [openUpdatePopup]);
+
+    useEffect(() => {
+        if(updateSubmit == 1 && updatedName == ""){
+            setUpdateMessage("Name Cannot Be Empty");
+            setUpdateSubmit(0);
+        }
+        else if(updateSubmit == 1){
+            let updatedConsumedToday = consumedTodayLog.slice();
+            updatedConsumedToday[updateIndex]["name"] = updatedName;
+            updatedConsumedToday[updateIndex]["calories"] = updatedCalories == "" ? "-1" : updatedCalories;
+            updatedConsumedToday[updateIndex]["carbs"] = updatedCarbs == "" ? "-1" : updatedCarbs;
+            updatedConsumedToday[updateIndex]["fat"] = updatedFat == "" ? "-1" : updatedFat;
+            updatedConsumedToday[updateIndex]["protein"] = updatedProtein == "" ? "-1" : updatedProtein;
+            updatedConsumedToday = updatedConsumedToday.reverse();
+
+            setUpdateMessage("");
+            setOpenUpdatePopup(0);
+            axios
+                .post(buildPath("api/updateConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": updatedConsumedToday,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+                .then((response)=>{
+                    setUpdatedName("");
+                    setUpdatedCalories("");
+                    setUpdatedCarbs("");
+                    setUpdatedFat("");
+                    setUpdatedProtein("");
+
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
+                    setUpdateSubmit(0);
+                })
+        }
+
+        if(updateSubmit == 2 && updatedAmount == ""){
+            setUpdateMessage("Amount Cannot Be Empty");
+            setUpdateSubmit(0);
+        }
+        else if(updateSubmit == 2){
+            let updatedConsumedToday = consumedTodayLog.slice();
+            updatedConsumedToday[updateIndex]["amount"] = updatedAmount;
+            updatedConsumedToday = updatedConsumedToday.reverse();
+
+            setUpdateMessage("");
+            setOpenUpdatePopup(0);
+            axios
+                .post(buildPath("api/updateConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": updatedConsumedToday,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+                .then((response)=>{
+                    setUpdatedAmount("");
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
+                    setUpdateSubmit(0);
+                })
+        }
+
+        if(updateSubmit == 3 && updatedAmount == ""){
+            setUpdateMessage("Amount Cannot Be Empty");
+            setUpdateSubmit(0);
+        }
+        else if(updateSubmit == 3){
+            let updatedConsumedToday = consumedTodayLog.slice();
+            updatedConsumedToday[updateIndex]["amount"] = updatedAmount;
+            updatedConsumedToday = updatedConsumedToday.reverse();
+
+            setUpdateMessage("");
+            setOpenUpdatePopup(0);
+            axios
+                .post(buildPath("api/updateConsumedItem"), {
+                    "userId": userId,
+                    "date": date,
+                    "item": updatedConsumedToday,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+                .then((response)=>{
+                    setUpdatedAmount("");
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
+                    setUpdateSubmit(0);
+                })
+        }
+    }, [updateSubmit]);
+
+
     if(mainErrorMessage != "")
         return(
             <div>
@@ -468,14 +627,14 @@ export default function NutritionPage(props){
         );
 
     let popOverBackgroundStyle={};
-    if(openPopup == 0)
+    if(openPopup == 0 && openUpdatePopup == 0)
         popOverBackgroundStyle={display: "none"};
     let trackedKeys = Object.keys(tracked);
     let popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 630px) / 2)"};
-    if(openPopup == 2 || openPopup == 3)
+    if(openPopup == 2 || openPopup == 3 || openUpdatePopup == 2 || openUpdatePopup == 3)
         popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 380px) / 2)"};
     else if(openPopup == 4)
-    popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 600px) / 2)", top: "calc((100vh - 600px) / 2)"};
+        popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 600px) / 2)", top: "calc((100vh - 600px) / 2)"};
     return (
         <div>
             <NavDrawer page='nutrition'/>
@@ -489,7 +648,11 @@ export default function NutritionPage(props){
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker label="" value={dayjs(date.slice(0,4)+"-"+date.slice(4,6)+"-"+date.slice(6))} 
                                 onChange={(newDate) => {
-                                    let temp = newDate.year()+""+(newDate.month() + 1);
+                                    let temp = newDate.year();
+                                    let month = newDate.month() + 1;
+                                    if(month.toString().length == 1)
+                                        month = "0"+month;
+                                    temp = temp +""+month;
                                     if(newDate.date().toString().length == 1)
                                         temp = temp + "0"+newDate.date().toString();
                                     else
@@ -571,14 +734,15 @@ export default function NutritionPage(props){
                         <table>
                             <thead>
                                 <tr>
-                                    <th className='logTableHeader' style={{width: "6%"}}><span className='logTableHeaderSpan'>Type</span></th>
-                                    <th className='logTableHeader' style={{width: "20%"}}><span className='logTableHeaderNameSpan'>Name</span></th>
-                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Calories</span></th>
-                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Carbs</span></th>
-                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Fat</span></th>
-                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Protein</span></th>
-                                    <th className='logTableHeader' style={{width: "12.8%"}}><span className='logTableHeaderSpan'>Amount</span></th>
-                                    <th className='logTableHeader' style={{width: "10%"}}><span className='logTableHeaderSpan'>Time</span></th>
+                                    <th className='logTableHeader' style={{width: "8%"}}><span className='logTableHeaderSpan'>Type</span></th>
+                                    <th className='logTableHeader' style={{width: "18%"}}><span className='logTableHeaderNameSpan'>Name</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Calories</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Carbs</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Fat</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Protein</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Amount</span></th>
+                                    <th className='logTableHeader' style={{width: "11%"}}><span className='logTableHeaderSpan'>Time</span></th>
+                                    <th className='logTableHeader' style={{width: "8%"}}><span className='logTableHeaderSpan'>Actions</span></th>
                                 </tr>
                                 
                             </thead>
@@ -586,16 +750,20 @@ export default function NutritionPage(props){
                             <tbody>
                                 {consumedTodayLog.map((element, index) => {
                                     let time = "";
-                                    let numTime = Number(element["time"]);
-                                    let amPm = "am";
-                                    if(numTime > 1159)
-                                        amPm = "pm";
-                                    if(numTime > 1259){
-                                        numTime = numTime - 1200;
+                                    if(element["time"] === "-")
+                                        time = "-";
+                                    else{
+                                        let numTime = Number(element["time"]);
+                                        let amPm = "am";
+                                        if(numTime > 1159)
+                                            amPm = "pm";
+                                        if(numTime > 1259){
+                                            numTime = numTime - 1200;
+                                        }
+                                        if(numTime < 60)
+                                            numTime = numTime + 1200;
+                                        time = numTime.toString().slice(0, -2) + ":" + numTime.toString().slice(-2)+" "+amPm;
                                     }
-                                    if(numTime < 60)
-                                        numTime = numTime + 1200;
-                                    time = numTime.toString().slice(0, -2) + ":" + numTime.toString().slice(-2)+" "+amPm;
                                     if(element["type"] == "food"){
                                         return(
                                             <tr key={index}>
@@ -635,6 +803,17 @@ export default function NutritionPage(props){
                                                         {time}
                                                     </span>
                                                 </td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataActionSpan'>
+                                                        <UpdateIcon className='updateIcon' fontSize='medium'
+                                                            onClick={() => {
+                                                                setUpdateIndex(index);
+                                                                setOpenUpdatePopup(1);
+                                                            }}
+                                                        />
+                                                        <DeleteIcon className='deleteIcon' fontSize='medium'/>
+                                                    </span>
+                                                </td>
                                             </tr>
                                         );
                                     }
@@ -661,6 +840,20 @@ export default function NutritionPage(props){
                                                     </span>
                                                 </td>
                                                 <td className='logTableData'><span className='logTableDataSpan'>{time}</span></td>
+                                                <td className='logTableData'>
+                                                    <span className='logTableDataActionSpan'>
+                                                        <UpdateIcon className='updateIcon' fontSize='medium'
+                                                            onClick={() => {
+                                                                setUpdateIndex(index);
+                                                                if(element["type"] == "water")
+                                                                    setOpenUpdatePopup(2);
+                                                                else
+                                                                    setOpenUpdatePopup(3);
+                                                            }}
+                                                        />
+                                                        <DeleteIcon className='deleteIcon' fontSize='medium'/>
+                                                    </span>
+                                                </td>
                                             </tr>
                                         );
                                     }
@@ -710,7 +903,7 @@ export default function NutritionPage(props){
                         </div>
                         <div className="addInputContainer">
                             <label className="addLabel" htmlFor="foodItemName">Calories</label>
-                            <input className="addInput" name="foodItemName" type="number" placeholder="Eneter calories" onChange={(e)=>{setAddCalories(""+e.target.value)}}/>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter calories" onChange={(e)=>{setAddCalories(""+e.target.value)}}/>
                         </div>
                         <div className="addInputContainer">
                             <label className="addLabel" htmlFor="foodItemName">Carbs (g)</label>
@@ -922,6 +1115,150 @@ export default function NutritionPage(props){
                             </tbody>
                         </table>
                         <button className="addNutritionButton" onClick={()=>{setAddSubmit(4)}}>Update</button>
+                    </div>
+                </Popover>
+
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openUpdatePopup == 1}
+                    onClose={() => {
+                        setOpenUpdatePopup(0);
+                        setUpdateMessage("");
+                        if(updateSubmit == 0){
+                            setUpdatedName("");
+                            setUpdatedCalories("");
+                            setUpdatedFat("");
+                            setUpdatedCarbs("");
+                            setUpdatedProtein("");
+                        }
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOver'>
+                        <div className='popOverTitle'>
+                            Update Food Item
+                        </div>
+                        <div className='addMessageContainer'>
+                            {updateMessage}
+                        </div>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Name*</label>
+                            <input className="addInput" name="foodItemName" type="text" placeholder="Enter name"
+                                value={updatedName}
+                                onChange={(e)=>{setUpdatedName(e.target.value)}}
+                            />
+                        </div>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Calories</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter calories"
+                                value={updatedCalories == "-1" ? "" : updatedCalories}
+                                onChange={(e)=>{setUpdatedCalories(""+e.target.value)}}
+                            />
+                        </div>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Carbs (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter carbs" 
+                                value={updatedCarbs == "-1" ? "" : updatedCarbs}
+                                onChange={(e)=>{setUpdatedCarbs(""+e.target.value)}}
+                            />
+                        </div>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Fat (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter fat"
+                                value={updatedFat == "-1" ? "" : updatedFat}
+                                onChange={(e)=>{setUpdatedFat(""+e.target.value)}}
+                            />
+                        </div>
+                        <div className="addInputContainer">
+                            <label className="addLabel" htmlFor="foodItemName">Protein (g)</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter protein"
+                                value={updatedProtein == "-1" ? "" : updatedProtein} 
+                                onChange={(e)=>{setUpdatedProtein(""+e.target.value)}}
+                            />
+                        </div>
+                        <button className="addNutritionButton" onClick={()=>{setUpdateSubmit(1)}}>Update Food</button>
+                    </div>
+                </Popover>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openUpdatePopup == 2}
+                    onClose={() => {
+                        setOpenUpdatePopup(0);
+                        setUpdateMessage("");
+                        if(updateSubmit == 0){
+                            setUpdatedAmount("");
+                        }
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOverWater'>
+                        <div className='popOverTitle'>
+                            Update Water
+                        </div>
+                        <div className='addMessageContainer'>
+                            {updateMessage}
+                        </div>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Amount (ml)*</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter amount" 
+                                value={updatedAmount}
+                                onChange={(e)=>{setUpdatedAmount(""+e.target.value)}}
+                            />
+                        </div>
+                        <button className="addNutritionButton addWaterButton" onClick={()=>{setUpdateSubmit(2)}}>Update Water</button>
+                    </div>
+                </Popover>
+                <Popover 
+                    anchorEl={document.getElementById('popOverContainer')}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={openUpdatePopup == 3}
+                    onClose={() => {
+                        setOpenUpdatePopup(0);
+                        setUpdateMessage("");
+                        if(updateSubmit == 0){
+                            setUpdatedAmount("");
+                        }
+                    }}
+                    sx={{zIndex: "9999"}}
+                    >
+                    <div className='popOverWater'>
+                        <div className='popOverTitle'>
+                            Update Steps
+                        </div>
+                        <div className='addMessageContainer'>
+                            {updateMessage}
+                        </div>
+                        <div className="addInputContainer" style={{marginTop: '5px'}}>
+                            <label className="addLabel" htmlFor="foodItemName">Amount*</label>
+                            <input className="addInput" name="foodItemName" type="number" placeholder="Enter amount"
+                                value={updatedAmount}
+                                onChange={(e)=>{setUpdatedAmount(""+e.target.value)}}
+                            />
+                        </div>
+                        <button className="addNutritionButton addWaterButton" onClick={()=>{setUpdateSubmit(3)}}>Update Steps</button>
                     </div>
                 </Popover>
             </div>
