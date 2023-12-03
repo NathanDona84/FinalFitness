@@ -55,27 +55,25 @@ export default function SignUp(props) {
         <div className="form-container sign-up-container">
             <div className="wasForm">
                 <h1>Create Account</h1>
-                <span style={{display: "inline-block"}}>or use your email for registration</span>
                 <label>First Name</label>
-                <input  type="text" name="fname" placeholder="First Name" 
+                <input className="signInput" type="text" name="fname" placeholder="First Name" 
                     onChange={(e) => {setFirstName(e.target.value)}}
                 />
                 <label>Last Name</label>
-                <input type="text" name="lname" placeholder="Last Name"
+                <input className="signInput" type="text" name="lname" placeholder="Last Name"
                     onChange={(e) => {setLastName(e.target.value)}}
                 />
                 <label>Email:</label>
-                <input type="email" name="email" placeholder="Email"
+                <input className="signInput" type="email" name="email" placeholder="Email"
                     onChange={(e) => {setEmail(e.target.value)}}
                 />
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Password"
+                <input className="signInput" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
-                <button onClick={() => {setRegister(1)}}>Sign Up</button>
+                <button className="signUpButton" onClick={() => {setRegister(1)}}>Sign Up</button>
                 <span id="loginResult">{message}</span>
             </div>
         </div>
     );
 }
-

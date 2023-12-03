@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {buildPath} from '../App.js';
 import axios from 'axios';
 import "../styles.css";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignInForm(props) {
     const [message, setMessage] = useState("");
@@ -20,7 +21,6 @@ export default function SignInForm(props) {
         }
         else if(login == 1){
             setMessage("");
-            console.log(email+" "+password);
             axios
                 .post(buildPath('api/login'),
                     {
@@ -28,13 +28,19 @@ export default function SignInForm(props) {
                         "password": password
                     })
                 .then((response) => {
+                    setLogin(0);
                     if(response["data"]["id"] == -1){
-                        setMessage("Email/Password Combination Incorrect");
-                        setLogin(0);
+                        setMessage(response["data"]["error"]);
                     }
                     else{
-                        localStorage.setItem('user_data', JSON.stringify(response["data"]));
-                        window.location.href = '/home';
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                        let decoded = jwtDecode(response["data"]["token"]["accessToken"], {complete: true});
+                        let info = Object.assign({}, decoded);
+                        let tracked = info["tracked"];
+                        delete info["tracked"];
+                        localStorage.setItem('user_data', JSON.stringify(info));
+                        localStorage.setItem('tracked', JSON.stringify(tracked));
+                        window.location.href = '/nutrition';
                     }
                 })
         }
@@ -44,17 +50,16 @@ export default function SignInForm(props) {
         <div className="form-container sign-in-container">
             <div className="wasForm">
                 <h1>Sign in</h1>
-                <span>or use your account</span>
                 <label>Email</label>
-                <input type="text" placeholder="Email" name="email" id="email" 
+                <input className="signInput" type="text" placeholder="Email" name="email" id="email" 
                     onChange={(e) => {setEmail(e.target.value);}}
                 />
                 <label>Password</label>
-                <input id="password" type="password" name="password" placeholder="Password"
+                <input className="signInput" id="password" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
                 <a href="#">Forgot your password?</a>
-                <button onClick={() => {setLogin(1)}}>Sign In</button>
+                <button className="signInButton" onClick={() => {setLogin(1)}}>Sign In</button>
                 <span id="loginResult">{message}</span>
             </div>
         </div>

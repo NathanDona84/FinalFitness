@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Redirect, Switch, Routes, BrowserRouter
 import './App.css';
 import './styles.css';
 import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
+import NutritionPage from './pages/NutritionPage';
+import { LandingPage } from './pages/Landingpage';
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -15,12 +16,13 @@ export function buildPath(route){
 
 
 function App() {
-    const [userId, setUserId] = useState(-1);
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LoginPage userId={userId} setUserId={setUserId}/>} />
-                <Route path="/home" element={<HomePage userId={userId} setUserId={setUserId}/>} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage pageType="signIn"/>} />
+                <Route path="/register" element={<LoginPage pageType="signUp"/>} />
+                <Route path="/nutrition" element={<NutritionPage />} />
             </Routes>
         </BrowserRouter>
     );

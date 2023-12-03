@@ -1,15 +1,6 @@
 .App {
     font-family: sans-serif;
     text-align: center;
-  }
-  
-  @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
-  
-  * {
-    box-sizing: border-box;
-  }
-  
-  body {
     background: #f6f5f7;
     display: flex;
     justify-content: center;
@@ -17,7 +8,14 @@
     flex-direction: column;
     font-family: "Montserrat", sans-serif;
     height: 100vh;
-    margin: -20px 0 50px;
+    width: 100vw;
+    margin: -50px 0 50px;
+  }
+  
+  @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+  
+  * {
+    box-sizing: border-box;
   }
   
   h1 {
@@ -48,7 +46,7 @@
     margin: 15px 0;
   }
   
-  button {
+  .signUpButton, .signInButton, .ghost {
     border-radius: 20px;
     border: 1px solid #ff4b2b;
     background-color: #ff4b2b;
@@ -62,14 +60,18 @@
     cursor: pointer;
   }
   
-  button:active {
+  .signUpButton:active, .signInButton:active, .ghost:active {
     transform: scale(0.95);
   }
   
-  button:focus {
+  .signUpButton:focus, .signInButton:focus, .ghost:focus {
     outline: none;
   }
   
+  .signUpButton:hover, .signInButton:hover{
+    background-color: #e14327;
+  }
+
   button.ghost {
     background-color: transparent;
     border-color: #ffffff;
@@ -86,7 +88,7 @@
     text-align: center;
   }
   
-  input {
+  .signInput {
     background-color: #eee;
     border: none;
     padding: 12px 15px;
@@ -256,4 +258,497 @@
     color: #3c97bf;
     text-decoration: none;
   }
+
+
+  .css-10hburv-MuiTypography-root{
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 16px !important;
+  }
+
   
+  /* landing page */
+
+  .landingBody {
+    background-image: url(../src/images/MuscleBuilding.jpg);
+    backdrop-filter: blur(5px);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 65px;
+    height: calc(100vh - 65px);
+    width: 100vw;
+    overflow-y: scroll;
+  }
+  .landingBody::-webkit-scrollbar {
+    display: none;
+  }
+
+  .banner {
+    background-color: #ff4b2b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    padding: 0 20px;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .left-content {
+    color: white;
+    font-weight: bold;
+    font-size: 36px;
+    font-family: 'Kanit';
+  }
+
+  .right-content {
+    margin-left: auto;
+  }
+
+  .content {
+    background-image: url(../src/images/finalfitnesspng.png);
+    background-size: cover;
+    background-position: -40px 0px;
+    background-repeat: no-repeat;
+    position: relative;
+    width: 550px;
+    height: 450px;
+    margin-left: calc((100vw - 550px) / 2);
+    margin-top: calc((100vh - 450px - 65px) / 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 60px;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  .bannerButton {
+    padding: 5px;
+    background-color: transparent;
+    font-size: 26px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5%;
+  }
+
+  .bannerButton:hover {
+    padding: 5px;
+    background-color: transparent;
+    font-weight: bold;
+    color: rgb(96, 93, 93);
+    border: none;
+    cursor: pointer;
+    border-radius: 5%;
+  }
+
+  .landingPageCreateAccountButton {
+    background-color: transparent;
+    color: rgb(244, 126, 53);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 26px;
+  }
+
+  .landingPageCreateAccountButton:hover {
+    background-color: transparent;
+    color: rgb(244, 59, 53);
+  }
+
+  .contentButtonContainer {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 5%;
+  }
+
+
+  /* Nutrition Page */
+
+  .mainContainer {
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 66px);
+    width: calc(100vw - 90px);
+    position: absolute;
+    left: 89px;
+    top: 65px;
+    padding: 1vw;
+  }
+
+  .dateContainer{
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .displayDate{
+    font-family: 'Playfair Display', serif;
+    font-size: calc(3vw + 24px);
+    font-weight: 800;
+    font-style: italic;
+  }
+
+  .datePickerContainer{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    margin-bottom: 1vw;
+  }
+
+  .datePickerContainer button{
+    padding: 0px;
+    position: relative;
+    right: 8px;
+  }
+
+  .datePickerContainer input{
+    display: none;
+  }
+
+  .datePickerContainer fieldset{
+    border: none;
+  }
+
+  .addNutritionContainer{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .progressContainer{
+    border: 1px solid #b8b7b7;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100px;
+    margin-top: 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5vw;
+  }
+  
+  .progressTableHeader{
+    text-align: left;
+  }
+
+  .progressTableHeaderSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.5vw + 15px);
+    position: relative;
+    bottom: 2px;
+  }
+
+  .progressTableDivider{
+    width: 169%;
+    height: 1px;
+    background-color: #b8b7b7;
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+    right: .5vw;
+  }
+
+  .trackedContainer{
+    height: 60px;
+  }
+
+  .progressTableMetricsData{
+    width: 60%;
+    padding-right: 7%;
+    font-size: calc(.4vw + 10px);
+    font-weight: 300;
+  }
+
+  .progressTableCurrentDataSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.4vw + 10px);
+    position: relative;
+    top: 7px;
+  }
+
+  .progressTableGoalDataSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.4vw + 10px);
+    position: relative;
+    top: 7px;
+  }
+
+  .logContainer{
+    border: 1px solid #b8b7b7;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100px;
+    margin-top: 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5vw;
+    max-height: 700px;
+    overflow-y: scroll;
+    font-weight: 300;
+  }
+
+  .logTableHeader{
+    text-align: left;
+    font-size: calc(.5vw + 15px);
+    font-weight: 100;
+    font-family: "roboto";
+    font-weight: 300;
+    padding-right: 1%;
+  }
+
+  .logTableHeaderNameSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.5vw + 15px);
+    position: relative;
+    bottom: 2px;
+  }
+
+  .logTableHeaderSpan{
+    font-family: "roboto";
+    font-weight: 300;
+    font-size: calc(.5vw + 15px);
+    position: relative;
+    bottom: 2px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    
+  }
+
+  .logTableDivider{
+    width: 1700%;
+    height: 1px;
+    background-color: #b8b7b7;
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+    right: .5vw;
+  }
+
+  .logTableData{
+    padding-right: 1%;
+    overflow: hidden;
+  }
+
+  .logTableDataTypeSpan{
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .logTableDataNameSpan{
+    font-family: 'roboto';
+    font-weight: 300;
+    font-size: calc(.4vw + 10px);
+    position: relative;
+    left: 2px;
+  }
+
+  .logTableDataSpan{
+    font-family: 'roboto';
+    font-weight: 300;
+    font-size: calc(.4vw + 10px);
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .logTableDataActionSpan{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .updateIcon, .deleteIcon{
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+
+  .updateIcon:hover, .deleteIcon:hover{
+    transform: scale(1.3);
+  }
+
+  .updateIcon{
+    margin-right: 7px;
+  }
+
+  .deleteIcon{
+    margin-left: 7px;
+  }
+
+  .mainContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  .logContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Nutrition PopOver*/
+
+  .popOverBackground{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 9990;
+    background-color: #72757866;
+  }
+
+  .popOverContainer{
+    position: fixed;
+    z-index: -1;
+  }
+
+  .popOver{
+    width: 500px;
+    height: 630px;
+    padding: 20px;
+    padding-top: 25px;
+  }
+
+  .css-3bmhjh-MuiPaper-root-MuiPopover-paper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .popOverTitle{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .addInputContainer{
+    width: 85%;
+    margin-left: calc(15% / 2);
+    margin-top: 15px;
+  }
+
+  .addLabel{
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .addInput{
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    background-color: #eee;
+    padding: 12px 15px;
+    margin: 5px 0;
+  }
+
+  .addMessageContainer{
+    width: 85%;
+    margin-left: calc(15% / 2);
+    height: 25px;
+    font-family: 'Montserrat', sans-serif;
+    color: red;
+    margin-top: 5px;
+    text-align: center;
+  }
+
+  .addNutritionButton{
+    border-radius: 20px;
+    border: 1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+    width: 164px;
+    margin-left: calc((100% - 164px) / 2);
+    margin-top: 23px;
+  }
+  
+  .addNutritionButton:active{
+    transform: scale(0.95);
+  }
+
+  .addNutritionButton:hover{
+    background-color: #e14327;
+  }
+  
+  .addNutritionButton:focus{
+    outline: none;
+  }
+
+  .popOverWater{
+    width: 500px;
+    height: 290px;
+    padding: 20px;
+    padding-top: 30px;
+  }
+
+  .addWaterButton{
+    width: 200px;
+    font-size: 14px;
+    margin-left: calc((100% - 200px) / 2);
+    margin-top: 25px;
+  }
+
+  .popOverMTG{
+    width: 600px;
+    height: 600px;
+    padding: 20px;
+    padding-top: 25px;
+  }
+
+  .mtgTable{
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    margin-left: 20px;
+  }
+
+  .mtgTableBodyRow{
+    height: 55px;
+  }
+  
+  .mtgTableSelectData{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55px;
+  }
+
+  .mtgTableTrackerData{
+    text-align: center;
+    height: 55px;
+  }
+
+  .mtgTableGoalData{
+    display: flex;
+    justify-content: center;
+    height: 55px;
+  }
+  .mtgTableGoalData input{
+    width: 80%;
+  }
