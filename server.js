@@ -354,18 +354,54 @@ app.post('/api/updateSettings', async (req, res, next) => {
         catch (e) {
             error = e.toString();
         }
+
+        try {
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch (e) {
+            error = e.toString();
+        }
     }
 
-    try {
-        ret["token"] = token.refresh(accessToken);
-    }
-    catch (e) {
-        error = e.toString();
-    }
     ret["error"] = error;
     res.status(200).json(ret);
 });
 
+app.post('/api/fetchUser', async (req, res, next) => {
+    const { userId, accessToken } = req.body;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if (token.isExpired(accessToken)) {
+        error = "token is expired";
+    }
+    else {
+        try {
+            const db = client.db("FinalFitness");
+            info = await db.collection('users').find({"id": userId}).toArray();
+            info = info[0];
+        }
+        catch (e) {
+            error = e.toString();
+        }
+
+        try {
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch (e) {
+            error = e.toString();
+        }
+    }
+
+    ret["info"] = info;
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+
 app.listen(PORT, () =>{
     console.log('Server listening on port ' + PORT);
 });
+
+

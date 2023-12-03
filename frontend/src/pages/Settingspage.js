@@ -26,20 +26,40 @@ export default function SettingsPage() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [updateResultMessage, setUpdateResultMessage] = useState("");
+    const [navbarName, setNavBarName] = useState("");
     
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
         let ud = JSON.parse(_ud);
         let userIdTemp = ud["id"];
         setUserId(userIdTemp);
-        setFirstName(ud["firstName"]);
-        setLastName(ud["lastName"]);
-        setEmail(ud["email"]);
-        setPassword(ud["password"]);
+        axios
+            .post(buildPath('api/fetchUser'),
+                {
+                    "userId": userIdTemp,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+            .then((response) => {
+                if (response["data"]["error"] == "") {
+                    setFirstName(response["data"]["info"]["firstName"]);
+                    setLastName(response["data"]["info"]["lastName"]);
+                    setEmail(response["data"]["info"]["email"]);
+                    setPassword(response["data"]["info"]["password"]);
+                    setNavBarName(response["data"]["info"]["firstName"]+" "+response["data"]["info"]["lastName"]);
+                    localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                }
+                else {
+                    setUpdateResultMessage(response["data"]["error"]);
+                }
+            })
     },[]);
 
     const togglePasswordFields = () => {
         setShowPasswordFields(!showPasswordFields);
+        setUpdateResultMessage("");
+        setNewPassword("");
+        setPrevPassword("");
+        setConfirmNewPassword("");
     };
 
     function validatePassword(password) {
@@ -119,6 +139,8 @@ export default function SettingsPage() {
                     })
                 .then((response) => {
                     if (response["data"]["error"] == "") {
+                        setPassword(newPassword);
+                        setNavBarName(firstName+" "+lastName);
                         localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
                         setUpdateResultMessage("Account Updated!")
                     }
@@ -143,25 +165,36 @@ export default function SettingsPage() {
                 })
             .then((response) => {
                 if (response["data"]["error"] == "") {
+                    setNavBarName(firstName+" "+lastName);
                     localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
                     setUpdateResultMessage("Account Updated!");
-                    
                 }
                 else {
                     setUpdateResultMessage(response["data"]["error"]);
                 }
             })
-        setUpdateResultMessage('');
-        return;
     }
+
+let settingsContainerStyle = {};
+if(showPasswordFields)
+    settingsContainerStyle["height"] = "750px";
+
+let buttonStyle = {};
+if(updateResultMessage.length < 58 && showPasswordFields)
+    buttonStyle["marginTop"] = "25px";
+
+let formStyle = {};
+if(updateResultMessage != "")
+    formStyle["marginTop"] = "10px";
 
 return(
     <div>
-        <NavDrawer page="Settings"/>
+        <NavDrawer page="Settings" name={navbarName}/>
         <div className="mainContainer">
-            <div className="settingsContainer">
-                <h2>User Settings</h2>
-                <form id="settingsForm">
+            <div className="settingsContainer" style={settingsContainerStyle}>
+                <h2 className='titleContainer'>User Settings</h2>
+                <div className='resultMessage'>{updateResultMessage}</div>
+                <form id="settingsForm" style={formStyle}>
                     <div className="settingsForm">
                         <label htmlFor="firstName">First Name:</label>
                         <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -172,14 +205,16 @@ return(
                         <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </div>
 
-                    <div className="settingsForm">
+                    <div className="settingsForm" style={{marginBottom: "25px"}}>
                         <label htmlFor="email">Email:</label>
                         <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
                     <div>
-                        <button type = "button" className="settingsChangePasswordButton" onClick={togglePasswordFields}>
-                            {showPasswordFields ? 'Hide Password Fields' : 'Click Here to Change Password'}
-                        </button>
+                        <div className='changePassContainer'>
+                            <button type = "button" className="settingsChangePasswordButton" onClick={togglePasswordFields}>
+                                {showPasswordFields ? 'Hide Password Fields' : 'Click Here to Change Password'}
+                            </button>
+                        </div>
 
                         {showPasswordFields && (
                             <div>
@@ -206,10 +241,9 @@ return(
                             </div>
                         )} 
                     </div>
-                        <div>
+                        <div className='settingsButtonContainer' style={buttonStyle}>
                             <button type= "button" className="settingsButton" onClick={updateInfo}>Save changes</button>
                         </div>
-                        <span>{updateResultMessage}</span>
                 </form>
             </div>
         </div>

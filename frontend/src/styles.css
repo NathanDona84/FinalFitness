@@ -444,25 +444,37 @@
 
     .settingsContainer {
       box-sizing: border-box;
-        height: calc(80vh - 66px);
-        width: calc(100vw - 90px);
-        position: absolute;
-        left: 89px;
-        top: 65px;
-        padding: 1vw;
-    }
-
-    .settingsContainer {
-      max-width: 400px;
-      margin: 50px auto;
+      height: 490px;
+      width: 400px;
+      padding: 1vw;
+      margin: 40px auto;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
+    .titleContainer{
+      margin-bottom: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .resultMessage{
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #settingsForm{
+      margin-top: 20px;
+    }
+
     .settingsForm {
       margin-bottom: 15px;
+      font-family: 'Montserrat', sans-serif;
     }
 
     label {
@@ -475,20 +487,49 @@
       padding: 8px;
       box-sizing: border-box;
       margin-bottom: 10px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .settingsButtonContainer, .changePassContainer{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .changePassContainer{
+      margin-bottom: 4px;
     }
 
     .settingsButton {
+      border-radius: 20px;
+      border: 1px solid #ff4b2b;
       background-color: #ff4b2b;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
       cursor: pointer;
+    }
+
+    .settingsButton:active{
+      transform: scale(0.95);
+    }
+    
+    .settingsButton:focus{
+      outline: none;
+    }
+    
+    .settingsButton:hover{
+      background-color: #e14327;
     }
 
     .password-fields {
       display: none;
     }
+
     .settingsChangePasswordButton {
       margin-bottom: 10px;
       font-size: 16px;
@@ -496,7 +537,19 @@
       color: rgb(53, 72, 244);
       background-color: white;
       cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      transition: transform 80ms ease-in;
     }
+
+    .settingsChangePasswordButton:hover{
+      color: rgb(217, 0, 224);
+    }
+
+    .settingsChangePasswordButton:active{
+      transform: scale(0.95);
+    }
+
   /* Nutrition Page */
 
   .mainContainer {

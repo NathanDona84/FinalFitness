@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import { buildPath } from '../App.js';
+import axios from 'axios';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -88,7 +90,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function NavDrawer(props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -98,10 +100,7 @@ export default function NavDrawer(props) {
     setOpen(false);
   };
 
-  let name = "";
-  let _ud = localStorage.getItem('user_data');
-  let ud = JSON.parse(_ud);
-  name = ud["firstName"]+" "+ud["lastName"];
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -123,7 +122,7 @@ export default function NavDrawer(props) {
           <div style={{width: "500px", fontFamily: "Kanit, sans-serif", fontSize: "36px"}}>
             Final Fitness
           </div>
-          <div style={{width: "100%", fontFamily: "Kanit, sans-serif", fontSize: "30px", textAlign: "right"}}>{name}</div>
+          <div style={{width: "100%", fontFamily: "Kanit, sans-serif", fontSize: "30px", textAlign: "right"}}>{props.name}</div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
