@@ -90,8 +90,6 @@ app.post('/api/login', async (req, res, next) => {
 app.post('/api/forgotPassword', async (req, res, next) => {
     //incoming: email, temp_password
     const { email, tempPassword } = req.body;
-    console.log(req.body);
-    console.log(tempPassword);
     let error = "";
     let reset = 1;
     let ret = {}
@@ -127,7 +125,8 @@ app.post('/api/forgotPassword', async (req, res, next) => {
             mailOptions = {
                 to: email,
                 from: process.env.NODEMAILER_EMAIL,
-                subject: "Final Fitness Temporary Password: " + tempPassword,
+                subject: "Final Fitness Temporary Password",
+                html: "Hello,<br> Final Fitness Temporary Password: " + tempPassword+""
             }
             smtpTransport.sendMail(mailOptions, function (e, response) {
                 if (e) {
@@ -140,7 +139,6 @@ app.post('/api/forgotPassword', async (req, res, next) => {
         }
     }
     catch(e){
-        inserted = -1;
         error = e.toString();
     }
     ret["error"] = error;

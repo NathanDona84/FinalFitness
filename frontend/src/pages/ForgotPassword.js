@@ -32,30 +32,34 @@ export default function ForgotPassword() {
     const handleResetPassword = () => {
 
         const tempPassword = generateRandomPassword();
-        axios
-            .post(buildPath('api/forgotPassword'),
-            {
-                "email": email,
-                "tempPassword": tempPassword
-            })
-            .then((response) => {
-                if (response["data"]["error"] == "") {
-                   
-                    setMessage("Temporary Password has been sent to your Email");
-                }
-                else {
-                    setMessage(response["data"]["error"]);
-                }
-            })
-        console.log(`Temporary password: ${tempPassword}`);
+        if(email == "")
+            setMessage("Email Cannot Be Empty");
+        else{
+            axios
+                .post(buildPath('api/forgotPassword'),
+                {
+                    "email": email,
+                    "tempPassword": tempPassword
+                })
+                .then((response) => {
+                    if (response["data"]["error"] == "") {
+                    
+                        setMessage("Temporary Password has been sent to your Email");
+                    }
+                    else {
+                        setMessage(response["data"]["error"]);
+                    }
+                })
+        }
     };
 
     return (
         <div className="reset-password-container">
             <div className="reset-password-form">
                 <h1>Reset Your Password</h1>
+                <div className="reset-password-message">{message}</div>
                 <p>Enter your email address below to reset your password.</p>
-                <label>Email</label>
+                <div><label>Email*</label></div>
                 <input
                     type="email"
                     placeholder="Enter your email"
@@ -63,8 +67,6 @@ export default function ForgotPassword() {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <button onClick={handleResetPassword}>Reset Password</button>
-                <p className="reset-password-message">{message}</p>
-
                 <Link to="/login">Back to Login</Link>
             </div>
         </div>
