@@ -5,7 +5,7 @@
     text-align: center;
     background-color: #f6f5f7;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     font-family: "Montserrat", sans-serif;
@@ -109,6 +109,7 @@
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    margin-top: 7vw;
   }
   
   .form-container {
