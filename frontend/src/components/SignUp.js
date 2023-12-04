@@ -11,6 +11,35 @@ export default function SignUp(props) {
     const [lastName, setLastName] = useState("");
     const [register, setRegister] = useState(0);
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validatePassword(password) {
+        // Individual checks for uppercase, lowercase, number, and special character
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialCharacter = /[!@#$%^&*()_+]/.test(password);
+
+        // Check if all individual requirements are met
+        const isPasswordValid =
+            hasUppercase && hasLowercase && hasNumber && hasSpecialCharacter && password.length >= 8;
+
+        // Track which specific requirements are not met
+        const requirementsNotMet = [];
+        if (!hasUppercase) requirementsNotMet.push('an uppercase letter');
+        if (!hasLowercase) requirementsNotMet.push('a lowercase letter');
+        if (!hasNumber) requirementsNotMet.push('a number');
+        if (!hasSpecialCharacter) requirementsNotMet.push('a special character');
+        if (password.length < 8) requirementsNotMet.push('at least 8 characters');
+
+        // Set updateResultMessage based on the requirements not met
+        if (requirementsNotMet.length > 0) {
+            setMessage(`Password must have ${requirementsNotMet.join(', ')}.`);
+        }
+
+        return isPasswordValid;
+    }
+
     useEffect(() => {
         if(firstName == "" && register == 1){
             setMessage("First Name Cannot Be Empty");
@@ -24,8 +53,15 @@ export default function SignUp(props) {
             setMessage("Email Cannot Be Empty");
             setRegister(0);
         }
+        else if(email != "" && register == 1 && !emailRegex.test(email)){
+            setMessage("Enter a valid Email");
+            setRegister(0);
+        }
         else if(password == "" && register == 1){
             setMessage("Password Cannot Be Empty");
+            setRegister(0);
+        }
+        else if (password != "" && register == 1 && !validatePassword(password)){
             setRegister(0);
         }
         else if(register == 1){

@@ -1,18 +1,22 @@
-.App {
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+  .App {
     font-family: sans-serif;
     text-align: center;
-    background: #f6f5f7;
+    background-color: #f6f5f7;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     font-family: "Montserrat", sans-serif;
     height: 100vh;
     width: 100vw;
-    margin: -50px 0 50px;
+    overflow-y: scroll;
   }
-  
-  @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+  .App::-webkit-scrollbar {
+    display: none;
+  }
   
   * {
     box-sizing: border-box;
@@ -105,6 +109,7 @@
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    margin-top: 7vw;
   }
   
   .form-container {
@@ -367,7 +372,218 @@
     bottom: 0;
     margin-bottom: 5%;
   }
+  /* Forgot Password Page */
 
+    /* styles.css */
+  
+    .reset-password-container {
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      background-color: #f6f5f7;
+      overflow-y: scroll;
+    }
+
+    .reset-password-container::-webkit-scrollbar{
+      display: none;
+    }
+
+    .reset-password-form {
+      width: 400px;
+      height: 350px;
+      padding: 20px;
+      border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5%;
+      font-family: 'Montserrat', sans-serif;
+    }
+  
+    .reset-password-form h1 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-family: 'Montserrat', sans-serif;
+    }
+  
+    .reset-password-form p {
+      font-size: 14px;
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+      margin-top: 10px;
+    }
+    
+    .reset-password-form div{
+      text-align: left;
+      width: 100%;
+    }
+
+    .reset-password-form label {
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-family: 'Montserrat', sans-serif;
+    }
+  
+    .reset-password-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 25px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .reset-password-form button {
+      border-radius: 20px;
+      border: 1px solid #ff4b2b;
+      background-color: #ff4b2b;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+      cursor: pointer;
+    }
+
+    .reset-password-form button:active{
+      transform: scale(0.95);
+    }
+    
+    .reset-password-form button:focus{
+      outline: none;
+    }
+    
+    .reset-password-form button:hover{
+      background-color: #e14327;
+    }
+  
+    .reset-password-message {
+      font-size: 14px;
+      color: #ff0000;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .reset-password-form a:hover {
+      color: #007BFF;
+      text-decoration: underline;
+    }
+
+  /* Settings Page */
+
+    .settingsContainer {
+      box-sizing: border-box;
+      height: 490px;
+      width: 400px;
+      padding: 1vw;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .titleContainer{
+      margin-bottom: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .resultMessage{
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #settingsForm{
+      margin-top: 20px;
+    }
+
+    .settingsForm {
+      margin-bottom: 15px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .settingsButtonContainer, .changePassContainer{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .changePassContainer{
+      margin-bottom: 4px;
+    }
+
+    .settingsButton {
+      border-radius: 20px;
+      border: 1px solid #ff4b2b;
+      background-color: #ff4b2b;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+      cursor: pointer;
+    }
+
+    .settingsButton:active{
+      transform: scale(0.95);
+    }
+    
+    .settingsButton:focus{
+      outline: none;
+    }
+    
+    .settingsButton:hover{
+      background-color: #e14327;
+    }
+
+    .password-fields {
+      display: none;
+    }
+
+    .settingsChangePasswordButton {
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-style: none;
+      color: rgb(53, 72, 244);
+      background-color: white;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      transition: transform 80ms ease-in;
+    }
+
+    .settingsChangePasswordButton:hover{
+      color: rgb(217, 0, 224);
+    }
+
+    .settingsChangePasswordButton:active{
+      transform: scale(0.95);
+    }
 
   /* Nutrition Page */
 

@@ -24,6 +24,12 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/register', (req, res) =>{
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/settings', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+    app.get('/forgotPassword', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;
@@ -80,6 +86,65 @@ app.post('/api/login', async (req, res, next) => {
     ret["id"] = id;
     res.status(200).json(ret);
 });
+
+app.post('/api/forgotPassword', async (req, res, next) => {
+    //incoming: email, temp_password
+    const { email, tempPassword } = req.body;
+    let error = "";
+    let reset = 1;
+    let ret = {}
+
+    try {
+        const db = client.db("FinalFitness");
+        let temp = await db.collection('users').find({ "email": email }).toArray();
+        if(temp.length < 1){
+            error = "Email address is not registered!"
+        }
+        else{
+            
+            await db.collection("users").updateOne(
+                { "email": email },
+                {
+                    $set: {
+                        "password": tempPassword,
+                    }
+                }
+            )
+            let smtpTransport = nodemailer.createTransport({
+                host: 'smtp.zoho.com',
+                secure: true,
+                auth: {
+                    user: process.env.NODEMAILER_EMAIL,
+                    pass: process.env.NODEMAILER_PASSWORD
+                }
+            });
+
+            let mailOptions, host;
+            host = req.get('host');
+
+            mailOptions = {
+                to: email,
+                from: process.env.NODEMAILER_EMAIL,
+                subject: "Final Fitness Temporary Password",
+                html: "Hello,<br> Final Fitness Temporary Password: " + tempPassword+""
+            }
+            smtpTransport.sendMail(mailOptions, function (e, response) {
+                if (e) {
+                    reset = -1;
+                    error = e;
+                } else {
+                    console.log("Message sent: " + response.message);
+                }
+            });
+        }
+    }
+    catch(e){
+        error = e.toString();
+    }
+    ret["error"] = error;
+    ret = { reset: reset, error: error };
+    res.status(200).json(ret);
+})
 
 app.post('/api/register', async (req, res, next) => {
     // incoming: UserID, Password, FirstName, LastName
@@ -342,6 +407,77 @@ app.post('/api/updateTracked', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+app.post('/api/updateSettings', async (req, res, next) => {
+    const { userId, firstName,lastName, email, password, accessToken } = req.body;
+    let error = "";
+    let ret = {};
+
+    if (token.isExpired(accessToken)) {
+        error = "token is expired";
+    }
+    else {
+        try {
+            const db = client.db("FinalFitness");
+            await db.collection("users").updateOne(
+                { "id": userId },
+                { $set: { "firstName": firstName,
+                          "lastName" : lastName,
+                          "email" : email,
+                          "password" : password,
+                        } }
+            )
+        }
+        catch (e) {
+            error = e.toString();
+        }
+
+        try {
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch (e) {
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+app.post('/api/fetchUser', async (req, res, next) => {
+    const { userId, accessToken } = req.body;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if (token.isExpired(accessToken)) {
+        error = "token is expired";
+    }
+    else {
+        try {
+            const db = client.db("FinalFitness");
+            info = await db.collection('users').find({"id": userId}).toArray();
+            info = info[0];
+        }
+        catch (e) {
+            error = e.toString();
+        }
+
+        try {
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch (e) {
+            error = e.toString();
+        }
+    }
+
+    ret["info"] = info;
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+
 app.listen(PORT, () =>{
     console.log('Server listening on port ' + PORT);
 });
+
+
