@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/settings', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
-    app.get('/forgotPassword', (req, res) => {
+    app.get('/forgot_Password', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
 }
