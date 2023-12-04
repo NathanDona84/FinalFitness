@@ -49,7 +49,53 @@
     text-decoration: none;
     margin: 15px 0;
   }
-  
+
+  .signInTitle{
+    margin-bottom: 10px;
+  }
+
+  #loginResult{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: red;
+    font-size: 16px;
+  }
+
+  .signInLabelContainer{
+    width: 100%;
+    text-align: center;
+  }
+
+  .emailLabel, .firstNameLabel{
+    margin-top: 10px;
+  }
+
+  .forgotPassword{
+    margin-top: 10px;
+    transition: transform 80ms ease-in;
+  }
+
+  .forgotPassword:hover{
+    font-weight: 600;
+  }
+
+  .forgotPassword:active{
+    transform: scale(.95);
+  }
+
+  .signUpTitle{
+    margin-bottom: 5px;
+    font-size: 26px;
+  }
+
+  .signUpInput{
+    background-color: #eee;
+    border: none;
+    padding: 9px 12px;
+    margin: 0px 0 20px 0;
+    width: 100%;
+  }
+
   .signUpButton, .signInButton, .ghost {
     border-radius: 20px;
     border: 1px solid #ff4b2b;
@@ -96,7 +142,7 @@
     background-color: #eee;
     border: none;
     padding: 12px 15px;
-    margin: 8px 0;
+    margin: 3px 0 20px 0;
     width: 100%;
   }
   
@@ -391,10 +437,10 @@
 
     .reset-password-form {
       width: 400px;
-      height: 350px;
+      height: 330px;
       padding: 20px;
       border-radius: 10px;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
       background-color: #fff;
       display: flex;
       flex-direction: column;
@@ -406,19 +452,20 @@
   
     .reset-password-form h1 {
       font-size: 24px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      margin-top: 10px;
       font-family: 'Montserrat', sans-serif;
     }
   
     .reset-password-form p {
       font-size: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-family: 'Montserrat', sans-serif;
       margin-top: 10px;
+      text-align: center;
     }
     
     .reset-password-form div{
-      text-align: left;
       width: 100%;
     }
 
@@ -465,9 +512,12 @@
     }
   
     .reset-password-message {
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 600;
       color: #ff0000;
       font-family: 'Montserrat', sans-serif;
+      width: 100%;
+      text-align: center;
     }
 
     .reset-password-form a:hover {
@@ -490,7 +540,7 @@
     }
 
     .titleContainer{
-      margin-bottom: 0;
+      margin-bottom: 10px;
       font-family: 'Montserrat', sans-serif;
     }
 
@@ -498,13 +548,13 @@
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       color: red;
-      margin-top: 10px;
       text-align: center;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 600;
     }
 
     #settingsForm{
-      margin-top: 20px;
+      margin-top: 5px;
     }
 
     .settingsForm {
@@ -851,6 +901,7 @@
     font-size: 30px;
     text-align: center;
     font-weight: 700;
+    margin-bottom: 10px;
   }
 
   .addInputContainer{
@@ -881,11 +932,11 @@
   .addMessageContainer{
     width: 85%;
     margin-left: calc(15% / 2);
-    height: 25px;
     font-family: 'Montserrat', sans-serif;
     color: red;
-    margin-top: 5px;
     text-align: center;
+    font-weight: 600;
+    font-size: 16px;
   }
 
   .addNutritionButton{
@@ -902,7 +953,7 @@
     cursor: pointer;
     width: 164px;
     margin-left: calc((100% - 164px) / 2);
-    margin-top: 23px;
+    margin-top: 15px;
   }
   
   .addNutritionButton:active{
@@ -919,7 +970,7 @@
 
   .popOverWater{
     width: 500px;
-    height: 290px;
+    height: 270px;
     padding: 20px;
     padding-top: 30px;
   }
@@ -933,7 +984,7 @@
 
   .popOverMTG{
     width: 600px;
-    height: 600px;
+    height: 570px;
     padding: 20px;
     padding-top: 25px;
   }
@@ -942,6 +993,7 @@
     width: 100%;
     font-family: 'Montserrat', sans-serif;
     margin-left: 20px;
+    margin-top: 5px;
   }
 
   .mtgTableBodyRow{

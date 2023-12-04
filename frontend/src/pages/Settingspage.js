@@ -183,18 +183,16 @@ let buttonStyle = {};
 if(updateResultMessage.length < 58 && showPasswordFields)
     buttonStyle["marginTop"] = "25px";
 
-let formStyle = {};
-if(updateResultMessage != "")
-    formStyle["marginTop"] = "10px";
+
 
 return(
     <div>
-        <NavDrawer page="Settings" name={navbarName}/>
+        <NavDrawer page="settings" name={navbarName}/>
         <div className="mainContainer">
             <div className="settingsContainer" style={settingsContainerStyle}>
                 <h2 className='titleContainer'>User Settings</h2>
                 <div className='resultMessage'>{updateResultMessage}</div>
-                <form id="settingsForm" style={formStyle}>
+                <form id="settingsForm">
                     <div className="settingsForm">
                         <label htmlFor="firstName">First Name:</label>
                         <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />

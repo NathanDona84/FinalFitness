@@ -107,14 +107,26 @@ export default function NutritionPage(props){
 
     const [deleteIndex, setDeleteIndex] = useState(-1);
 
-    useEffect(() => {
-        let _ud = localStorage.getItem('user_data');
-        let ud = JSON.parse(_ud);
-        let userIdTemp = ud["id"];
-        setUserId(userIdTemp);
-        setFirstName(ud["firstName"]);
-        setLastName(ud["lastName"]);
-        let trackedTemp = JSON.parse(localStorage.getItem('tracked'));
+    const getTracked = async (userIdTemp) => {
+        let trackedTemp = {};
+        await axios
+            .post(buildPath('api/fetchUser'),
+                {
+                    "userId": userIdTemp,
+                    "accessToken": localStorage.getItem('accessToken')
+                })
+            .then((response) => {
+                if (response["data"]["error"] == "") {
+                    setFirstName(response["data"]["info"]["firstName"]);
+                    setLastName(response["data"]["info"]["lastName"]);
+                    trackedTemp = response["data"]["info"]["tracked"];
+                    localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                }
+                else {
+                    setMainErrorMessage(response["data"]["error"]);
+                }
+            });
+
         trackedTemp = Object.keys(trackedTemp).sort().reduce(
             (obj, key) => { 
             obj[key] = trackedTemp[key]; 
@@ -123,7 +135,7 @@ export default function NutritionPage(props){
             {}
         );
         setTracked(trackedTemp);
-        
+
         let trackedKeysTemp = Object.keys(trackedTemp);
         setTrackedCalories(trackedKeysTemp.includes("calories"));
         setTrackedCarbs(trackedKeysTemp.includes("carbs"));
@@ -144,6 +156,15 @@ export default function NutritionPage(props){
             setTrackedStepsGoal(trackedTemp["steps"]);
         if(trackedKeysTemp.includes("water"))
             setTrackedWaterGoal(trackedTemp["water"]);
+    } 
+
+    useEffect(() => {
+        let _ud = localStorage.getItem('user_data');
+        let ud = JSON.parse(_ud);
+        let userIdTemp = ud["id"];
+        setUserId(userIdTemp);
+
+        getTracked(userIdTemp);
 
         let temp = new Date();
         let year = temp.getFullYear().toString();
@@ -487,7 +508,6 @@ export default function NutritionPage(props){
 
                         if(response["data"]["error"] == ""){
                             setTracked(newTracked);
-                            localStorage.setItem('tracked', JSON.stringify(newTracked));
                             localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
                         }
                         else{
@@ -516,7 +536,6 @@ export default function NutritionPage(props){
         if(updateSubmit == 1 && updatedName == ""){
             setUpdateMessage("Name Cannot Be Empty");
             setUpdateSubmit(0);
-            setUpdateIndex(-1);
         }
         else if(updateSubmit == 1){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -558,7 +577,6 @@ export default function NutritionPage(props){
         if(updateSubmit == 2 && updatedAmount == ""){
             setUpdateMessage("Amount Cannot Be Empty");
             setUpdateSubmit(0);
-            setUpdateIndex(-1);
         }
         else if(updateSubmit == 2){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -591,7 +609,6 @@ export default function NutritionPage(props){
         if(updateSubmit == 3 && updatedAmount == ""){
             setUpdateMessage("Amount Cannot Be Empty");
             setUpdateSubmit(0);
-            setUpdateIndex(-1);
         }
         else if(updateSubmit == 3){
             let updatedConsumedToday = consumedTodayLog.slice();
@@ -650,7 +667,7 @@ export default function NutritionPage(props){
     if(mainErrorMessage != "")
         return(
             <div>
-                <NavDrawer page='nutrition'/>
+                <NavDrawer page='nutrition' name={firstName + " "+ lastName}/>
                 <div className='mainContainer'>
                     {mainErrorMessage}
                 </div>
@@ -660,15 +677,21 @@ export default function NutritionPage(props){
     let popOverBackgroundStyle={};
     if(openPopup == 0 && openUpdatePopup == 0)
         popOverBackgroundStyle={display: "none"};
-    let trackedKeys = Object.keys(tracked);
+
     let popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 630px) / 2)"};
     if(openPopup == 2 || openPopup == 3 || openUpdatePopup == 2 || openUpdatePopup == 3)
         popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 380px) / 2)"};
     else if(openPopup == 4)
         popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 600px) / 2)", top: "calc((100vh - 600px) / 2)"};
+    
+    let popOverTitleStyle = {}
+    if(addMessage == "")
+        popOverTitleStyle = {marginBottom: "20px"};
+
+    let trackedKeys = Object.keys(tracked);
     return (
         <div>
-            <NavDrawer page='nutrition'/>
+            <NavDrawer page='nutrition' name={firstName + " "+ lastName}/>
             <div className='mainContainer'>
                 <div className='addNutritionContainer'>
                         <AddNutritionMenu onSelect={(popNum) => {setOpenPopup(popNum)}}/>
@@ -1076,10 +1099,10 @@ export default function NutritionPage(props){
                     sx={{zIndex: "9999"}}
                     >
                     <div className='popOverMTG'>
-                        <div className='popOverTitle'>
+                        <div className='popOverTitle' style={popOverTitleStyle}>
                             Modify Trackers and Goals
                         </div>
-                        <div className='addMessageContainer'>
+                        <div className='addMessageContainer' style={{fontSize: "18px"}}>
                             {addMessage}
                         </div>
                         <table className='mtgTable'>
@@ -1171,6 +1194,7 @@ export default function NutritionPage(props){
                     onClose={() => {
                         setOpenUpdatePopup(0);
                         setUpdateMessage("");
+                        setUpdateIndex(-1);
                         if(updateSubmit == 0){
                             setUpdatedName("");
                             setUpdatedCalories("");
@@ -1223,7 +1247,10 @@ export default function NutritionPage(props){
                                 onChange={(e)=>{setUpdatedProtein(""+e.target.value)}}
                             />
                         </div>
-                        <button className="addNutritionButton" onClick={()=>{setUpdateSubmit(1)}}>Update Food</button>
+                        <button className="addNutritionButton" style={{width: "200px", marginLeft: "calc((100% - 200px) / 2)"}} 
+                            onClick={()=>{setUpdateSubmit(1)}}>
+                                Update Food
+                        </button>
                     </div>
                 </Popover>
                 <Popover 
@@ -1240,6 +1267,7 @@ export default function NutritionPage(props){
                     onClose={() => {
                         setOpenUpdatePopup(0);
                         setUpdateMessage("");
+                        setUpdateIndex(-1);
                         if(updateSubmit == 0){
                             setUpdatedAmount("");
                         }
@@ -1260,7 +1288,11 @@ export default function NutritionPage(props){
                                 onChange={(e)=>{setUpdatedAmount(""+e.target.value)}}
                             />
                         </div>
-                        <button className="addNutritionButton addWaterButton" onClick={()=>{setUpdateSubmit(2)}}>Update Water</button>
+                        <button className="addNutritionButton addWaterButton" 
+                            style={{width: "250px", marginLeft: "calc((100% - 250px) / 2)"}}
+                            onClick={()=>{setUpdateSubmit(2)}}>
+                                Update Water
+                        </button>
                     </div>
                 </Popover>
                 <Popover 
@@ -1276,6 +1308,7 @@ export default function NutritionPage(props){
                     open={openUpdatePopup == 3}
                     onClose={() => {
                         setOpenUpdatePopup(0);
+                        setUpdateIndex(-1);
                         setUpdateMessage("");
                         if(updateSubmit == 0){
                             setUpdatedAmount("");
@@ -1297,7 +1330,11 @@ export default function NutritionPage(props){
                                 onChange={(e)=>{setUpdatedAmount(""+e.target.value)}}
                             />
                         </div>
-                        <button className="addNutritionButton addWaterButton" onClick={()=>{setUpdateSubmit(3)}}>Update Steps</button>
+                        <button className="addNutritionButton addWaterButton" 
+                            style={{width: "250px", marginLeft: "calc((100% - 250px) / 2)"}}
+                            onClick={()=>{setUpdateSubmit(3)}}>
+                                Update Steps
+                        </button>
                     </div>
                 </Popover>
             </div>

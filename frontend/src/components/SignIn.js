@@ -37,10 +37,7 @@ export default function SignInForm(props) {
                         localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
                         let decoded = jwtDecode(response["data"]["token"]["accessToken"], {complete: true});
                         let info = Object.assign({}, decoded);
-                        let tracked = info["tracked"];
-                        delete info["tracked"];
                         localStorage.setItem('user_data', JSON.stringify(info));
-                        localStorage.setItem('tracked', JSON.stringify(tracked));
                         window.location.href = '/nutrition';
                     }
                 })
@@ -50,18 +47,18 @@ export default function SignInForm(props) {
     return (
         <div className="form-container sign-in-container">
             <div className="wasForm">
-                <h1>Sign in</h1>
-                <label>Email</label>
+                <h1 className='signInTitle'>Sign in</h1>
+                <div id="loginResult">{message}</div>
+                <div className="signInLabelContainer"><label className='emailLabel'>Email</label></div>
                 <input className="signInput" type="text" placeholder="Email" name="email" id="email" 
                     onChange={(e) => {setEmail(e.target.value);}}
                 />
-                <label>Password</label>
+                <div className="signInLabelContainer"><label>Password</label></div>
                 <input className="signInput" id="password" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
-                <Link to="/forgot_password">Forgot your password?</Link>
+                <a className="forgotPassword" href="/forgot_password">Forgot your password?</a>
                 <button className="signInButton" onClick={() => {setLogin(1)}}>Sign In</button>
-                <span id="loginResult">{message}</span>
             </div>
         </div>
     );

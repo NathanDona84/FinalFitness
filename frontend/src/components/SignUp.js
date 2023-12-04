@@ -26,15 +26,15 @@ export default function SignUp(props) {
 
         // Track which specific requirements are not met
         const requirementsNotMet = [];
-        if (!hasUppercase) requirementsNotMet.push('an uppercase letter');
-        if (!hasLowercase) requirementsNotMet.push('a lowercase letter');
-        if (!hasNumber) requirementsNotMet.push('a number');
-        if (!hasSpecialCharacter) requirementsNotMet.push('a special character');
-        if (password.length < 8) requirementsNotMet.push('at least 8 characters');
+        if (!hasUppercase) requirementsNotMet.push('An Uppercase Letter');
+        if (!hasLowercase) requirementsNotMet.push('A Lowercase Letter');
+        if (!hasNumber) requirementsNotMet.push('A Number');
+        if (!hasSpecialCharacter) requirementsNotMet.push('A Special Character');
+        if (password.length < 8) requirementsNotMet.push('At Least 8 Characters');
 
         // Set updateResultMessage based on the requirements not met
         if (requirementsNotMet.length > 0) {
-            setMessage(`Password must have ${requirementsNotMet.join(', ')}.`);
+            setMessage(`Password Must Have ${requirementsNotMet.join(', ')}.`);
         }
 
         return isPasswordValid;
@@ -54,7 +54,7 @@ export default function SignUp(props) {
             setRegister(0);
         }
         else if(email != "" && register == 1 && !emailRegex.test(email)){
-            setMessage("Enter a valid Email");
+            setMessage("Enter A Valid Email");
             setRegister(0);
         }
         else if(password == "" && register == 1){
@@ -85,30 +85,34 @@ export default function SignUp(props) {
                     }
                 })
         }
-    }, [register]); 
+    }, [register]);
+
+    let messageStyle = {};
+    if(message.length > 38)
+        messageStyle["fontSize"] = 14;
 
     return (
         <div className="form-container sign-up-container">
             <div className="wasForm">
-                <h1>Create Account</h1>
-                <label>First Name</label>
-                <input className="signInput" type="text" name="fname" placeholder="First Name" 
+                <h1 className='signUpTitle'>Create Account</h1>
+                <span id="loginResult" style={messageStyle}>{message}</span>
+                <label className='firstNameLabel'>First Name*</label>
+                <input className="signUpInput" type="text" name="fname" placeholder="First Name" 
                     onChange={(e) => {setFirstName(e.target.value)}}
                 />
-                <label>Last Name</label>
-                <input className="signInput" type="text" name="lname" placeholder="Last Name"
+                <label>Last Name*</label>
+                <input className="signUpInput" type="text" name="lname" placeholder="Last Name"
                     onChange={(e) => {setLastName(e.target.value)}}
                 />
-                <label>Email:</label>
-                <input className="signInput" type="email" name="email" placeholder="Email"
+                <label>Email*</label>
+                <input className="signUpInput" type="email" name="email" placeholder="Email"
                     onChange={(e) => {setEmail(e.target.value)}}
                 />
-                <label>Password</label>
-                <input className="signInput" type="password" name="password" placeholder="Password"
+                <label>Password*</label>
+                <input className="signUpInput" type="password" name="password" placeholder="Password"
                     onChange={(e) => {setPassword(e.target.value)}}
                 />
                 <button className="signUpButton" onClick={() => {setRegister(1)}}>Sign Up</button>
-                <span id="loginResult">{message}</span>
             </div>
         </div>
     );

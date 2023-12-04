@@ -100,6 +100,9 @@ export default function NavDrawer(props) {
     setOpen(false);
   };
 
+  let settingsStyle = { display: 'block' };
+  if(props.page == "settings")
+    settingsStyle["backgroundColor"] = '#cccccc';
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -169,7 +172,7 @@ export default function NavDrawer(props) {
         </List>
         <Divider sx={{mt:"75px", mb:"-8px"}}/>
         <List>
-            <ListItem key={"Settings"} disablePadding sx={{ display: 'block' }}
+            <ListItem key={"Settings"} disablePadding sx={settingsStyle}
               onClick={() => {
                 window.location.href = '/settings';
               }}
@@ -197,7 +200,6 @@ export default function NavDrawer(props) {
             <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}
                 onClick={() => {
                   localStorage.removeItem("user_data"); 
-                  localStorage.removeItem("tracked");
                   localStorage.removeItem("accessToken");
                   window.location.href = "/login";
                 }}

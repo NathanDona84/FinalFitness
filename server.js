@@ -98,7 +98,7 @@ app.post('/api/forgotPassword', async (req, res, next) => {
         const db = client.db("FinalFitness");
         let temp = await db.collection('users').find({ "email": email }).toArray();
         if(temp.length < 1){
-            error = "Email address is not registered!"
+            error = "Email Address Is Not Registered!"
         }
         else{
             
@@ -158,7 +158,7 @@ app.post('/api/register', async (req, res, next) => {
         let temp = await db.collection('users').find({"email": email}).toArray();
         if(temp.length > 0){
             inserted = -1;
-            error = 'email already exists';
+            error = 'Email Already Registered';
         }
         else{
             let id = await db.collection('users').find().sort({"id": -1}).limit(1).toArray();
