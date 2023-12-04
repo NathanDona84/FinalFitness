@@ -91,73 +91,75 @@ export default function NutritionPage(props){
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
         let ud = JSON.parse(_ud);
-        let userIdTemp = ud["id"];
-        setUserId(userIdTemp);
-        setFirstName(ud["firstName"]);
-        setLastName(ud["lastName"]);
-        let trackedTemp = JSON.parse(localStorage.getItem('tracked'));
-        trackedTemp = Object.keys(trackedTemp).sort().reduce(
-            (obj, key) => { 
-            obj[key] = trackedTemp[key]; 
-            return obj;
-            }, 
-            {}
-        );
-        setTracked(trackedTemp);
-        
-        let trackedKeysTemp = Object.keys(trackedTemp);
-        setTrackedCalories(trackedKeysTemp.includes("calories"));
-        setTrackedCarbs(trackedKeysTemp.includes("carbs"));
-        setTrackedFat(trackedKeysTemp.includes("fat"));
-        setTrackedProtein(trackedKeysTemp.includes("protein"));
-        setTrackedSteps(trackedKeysTemp.includes("steps"));
-        setTrackedWater(trackedKeysTemp.includes("water"));
+        if (ud && ud.id) {
+            let userIdTemp = ud["id"];
+            setUserId(userIdTemp);
+            setFirstName(ud["firstName"]);
+            setLastName(ud["lastName"]);
+            let trackedTemp = JSON.parse(localStorage.getItem('tracked'));
+            trackedTemp = Object.keys(trackedTemp).sort().reduce(
+                (obj, key) => { 
+                obj[key] = trackedTemp[key]; 
+                return obj;
+                }, 
+                {}
+            );
+            setTracked(trackedTemp);
+            
+            let trackedKeysTemp = Object.keys(trackedTemp);
+            setTrackedCalories(trackedKeysTemp.includes("calories"));
+            setTrackedCarbs(trackedKeysTemp.includes("carbs"));
+            setTrackedFat(trackedKeysTemp.includes("fat"));
+            setTrackedProtein(trackedKeysTemp.includes("protein"));
+            setTrackedSteps(trackedKeysTemp.includes("steps"));
+            setTrackedWater(trackedKeysTemp.includes("water"));
 
-        if(trackedKeysTemp.includes("calories"))
-            setTrackedCaloriesGoal(trackedTemp["calories"]);
-        if(trackedKeysTemp.includes("carbs"))
-            setTrackedCarbsGoal(trackedTemp["carbs"]);
-        if(trackedKeysTemp.includes("fat"))
-            setTrackedFatGoal(trackedTemp["fat"]);
-        if(trackedKeysTemp.includes("protein"))
-            setTrackedProteinGoal(trackedTemp["protein"]);
-        if(trackedKeysTemp.includes("steps"))
-            setTrackedStepsGoal(trackedTemp["steps"]);
-        if(trackedKeysTemp.includes("water"))
-            setTrackedWaterGoal(trackedTemp["water"]);
+            if(trackedKeysTemp.includes("calories"))
+                setTrackedCaloriesGoal(trackedTemp["calories"]);
+            if(trackedKeysTemp.includes("carbs"))
+                setTrackedCarbsGoal(trackedTemp["carbs"]);
+            if(trackedKeysTemp.includes("fat"))
+                setTrackedFatGoal(trackedTemp["fat"]);
+            if(trackedKeysTemp.includes("protein"))
+                setTrackedProteinGoal(trackedTemp["protein"]);
+            if(trackedKeysTemp.includes("steps"))
+                setTrackedStepsGoal(trackedTemp["steps"]);
+            if(trackedKeysTemp.includes("water"))
+                setTrackedWaterGoal(trackedTemp["water"]);
 
-        let temp = new Date();
-        let year = temp.getFullYear().toString();
-        let month = (temp.getMonth() + 1).toString();
-        let day = temp.getDate().toString();
-        let suffix = "th";
-        if(day == "1")
-            suffix = "st";
-        else if(day == "2")
-            suffix = "nd";
-        else if(day == "3")
-            suffix = "rd";
-        if(day.length == 1)
-            day = "0"+day;
-        setDate(year+month+day);
-        setDisplayDate(numToDay[temp.getDay()]+", "+numToMonth[temp.getMonth()]+" "+temp.getDate()+suffix);
+            let temp = new Date();
+            let year = temp.getFullYear().toString();
+            let month = (temp.getMonth() + 1).toString();
+            let day = temp.getDate().toString();
+            let suffix = "th";
+            if(day == "1")
+                suffix = "st";
+            else if(day == "2")
+                suffix = "nd";
+            else if(day == "3")
+                suffix = "rd";
+            if(day.length == 1)
+                day = "0"+day;
+            setDate(year+month+day);
+            setDisplayDate(numToDay[temp.getDay()]+", "+numToMonth[temp.getMonth()]+" "+temp.getDate()+suffix);
 
-        axios
-            .post(buildPath('api/fetchConsumed'), 
-                {
-                    "userId": userIdTemp,
-                    "date": (year+month+day),
-                    "accessToken": localStorage.getItem('accessToken')
+            axios
+                .post(buildPath('api/fetchConsumed'), 
+                    {
+                        "userId": userIdTemp,
+                        "date": (year+month+day),
+                        "accessToken": localStorage.getItem('accessToken')
+                    })
+                .then((response) => {
+                    if(response["data"]["error"] == ""){
+                        setConsumed(response["data"]["info"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    }
+                    else{
+                        setMainErrorMessage(response["data"]["error"]);
+                    }
                 })
-            .then((response) => {
-                if(response["data"]["error"] == ""){
-                    setConsumed(response["data"]["info"]);
-                    localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
-                }
-                else{
-                    setMainErrorMessage(response["data"]["error"]);
-                }
-            })
+    }
     }, []);
 
     useEffect(() => {

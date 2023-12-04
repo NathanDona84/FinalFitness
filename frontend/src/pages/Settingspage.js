@@ -31,28 +31,32 @@ export default function SettingsPage() {
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
         let ud = JSON.parse(_ud);
-        let userIdTemp = ud["id"];
-        setUserId(userIdTemp);
-        axios
-            .post(buildPath('api/fetchUser'),
-                {
+
+        // Check if user data is present before accessing properties
+        if (ud && ud.id) {
+            let userIdTemp = ud.id;
+            setUserId(userIdTemp);
+
+            axios
+                .post(buildPath('api/fetchUser'), {
                     "userId": userIdTemp,
                     "accessToken": localStorage.getItem('accessToken')
                 })
-            .then((response) => {
-                if (response["data"]["error"] == "") {
-                    setFirstName(response["data"]["info"]["firstName"]);
-                    setLastName(response["data"]["info"]["lastName"]);
-                    setEmail(response["data"]["info"]["email"]);
-                    setPassword(response["data"]["info"]["password"]);
-                    setNavBarName(response["data"]["info"]["firstName"]+" "+response["data"]["info"]["lastName"]);
-                    localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
-                }
-                else {
-                    setUpdateResultMessage(response["data"]["error"]);
-                }
-            })
-    },[]);
+                .then((response) => {
+                    if (response["data"]["error"] == "") {
+                        setFirstName(response["data"]["info"]["firstName"]);
+                        setLastName(response["data"]["info"]["lastName"]);
+                        setEmail(response["data"]["info"]["email"]);
+                        setPassword(response["data"]["info"]["password"]);
+                        setNavBarName(response["data"]["info"]["firstName"] + " " + response["data"]["info"]["lastName"]);
+                        localStorage.setItem('accessToken', response["data"]["token"]["accessToken"]);
+                    } else {
+                        setUpdateResultMessage(response["data"]["error"]);
+                    }
+                });
+        }
+    }, []);
+
 
     const togglePasswordFields = () => {
         setShowPasswordFields(!showPasswordFields);
