@@ -27,6 +27,7 @@ export default function SettingsPage() {
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [updateResultMessage, setUpdateResultMessage] = useState("");
     const [navbarName, setNavBarName] = useState("");
+    const [deleteSubmit, setDeleteSubmit] = useState(0);
     
     useEffect(() => {
         let _ud = localStorage.getItem('user_data');
@@ -53,6 +54,28 @@ export default function SettingsPage() {
                 }
             })
     },[]);
+
+    useEffect(() => {
+        if(deleteSubmit == 2){  
+            axios
+                .post(buildPath('api/deleteAccount'),
+                    {
+                        "userId": userId,
+                        "accessToken": localStorage.getItem('accessToken')
+                    })
+                .then((response) => {
+                    if (response["data"]["error"] == "") {
+                        localStorage.removeItem("user_data"); 
+                        localStorage.removeItem("accessToken");
+                        window.location.href = "/login";
+                    }
+                    else {
+                        setUpdateResultMessage(response["data"]["error"]);
+                        setDeleteSubmit(0);
+                    }
+                })
+        }
+    }, [deleteSubmit]);
 
     const togglePasswordFields = () => {
         setShowPasswordFields(!showPasswordFields);
@@ -183,12 +206,20 @@ let buttonStyle = {};
 if(updateResultMessage.length < 58 && showPasswordFields)
     buttonStyle["marginTop"] = "25px";
 
-
+let popUpContainerStyle = {width: "500px", height: "630px", left: "calc((100vw - 500px) / 2)", top: "calc((100vh - 380px) / 2)"};
+let popOverBackgroundStyle={};
+if(deleteSubmit != 1)
+    popOverBackgroundStyle={display: "none"};
 
 return(
     <div>
         <NavDrawer page="settings" name={navbarName}/>
         <div className="mainContainer">
+            <div className='deleteAccountContainer'>
+                <button className='deleteAccountButton' onClick={() => {setDeleteSubmit(1)}}>
+                    Delete Account
+                </button>
+            </div>
             <div className="settingsContainer" style={settingsContainerStyle}>
                 <h2 className='titleContainer'>User Settings</h2>
                 <div className='resultMessage'>{updateResultMessage}</div>
@@ -245,6 +276,30 @@ return(
                 </form>
             </div>
         </div>
+        <div className='popOverContainer' id='settingsPopOverContainer' style={popUpContainerStyle}>
+            <Popover 
+                anchorEl={document.getElementById('settingsPopOverContainer')}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={deleteSubmit == 1}
+                onClose={() => {
+                    setDeleteSubmit(0);
+                }}
+                sx={{zIndex: "9999"}}
+                >
+                <div className='popOverWater' style={{height: "160px"}}>
+                    <div className='deleteMessage'>Are you sure you want to delete your account?</div>
+                    <button className="deleteAccountButton deleteAccountPopoverButton" onClick={()=>{setDeleteSubmit(2)}}>Delete Account</button>
+                </div>
+            </Popover>
+        </div>
+        <div className='popOverBackground' style={popOverBackgroundStyle}></div>
     </div>
 )
 

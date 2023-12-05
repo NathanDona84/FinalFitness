@@ -165,8 +165,12 @@ app.post('/api/register', async (req, res, next) => {
             id = id[0]["id"];
             newUser["id"] = id+1;
             await db.collection('users').insertOne(newUser);
+
             newConsumed = {userId: id+1, dates: {}};
             await db.collection('consumed').insertOne(newConsumed);
+
+            newWorkouts = {userId: id+1, dates: {}};
+            await db.collection('workouts').insertOne(newWorkouts);
 
             let smtpTransport = nodemailer.createTransport({
                 host: 'smtp.zoho.com',
@@ -219,6 +223,38 @@ app.get('/api/verify', async (req, res, next) => {
         res.end("<p>"+e.toString()+"</p>");
     }
 });
+
+app.post('/api/deleteAccount', async (req, res, next) => {
+    const { userId, accessToken } = req.body;
+    let error = "";
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try {
+            const db = client.db("FinalFitness");
+            await db.collection('users').deleteOne({"id": userId});
+            await db.collection('consumed').deleteOne({"userId": userId});
+            await db.collection('workouts').deleteOne({"userId": userId});
+        }
+        catch(e){
+            error = e.toString();
+        }
+    
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
 
 app.post('/api/fetchConsumed', async (req, res, next) => {
     const { userId, date, accessToken } = req.body;

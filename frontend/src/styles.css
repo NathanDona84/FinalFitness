@@ -527,6 +527,49 @@
 
   /* Settings Page */
 
+    .deleteAccountContainer{
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .deleteAccountButton{
+      border-radius: 5px;
+      border: 1px solid red;
+      background-color: red;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+      cursor: pointer;
+      width: 250px;
+    }
+
+    .deleteAccountButton:hover{
+      background-color: rgb(201, 0, 0);
+    }
+
+    .deleteAccountButton:active{
+      transform: scale(.95);
+    }
+
+    .deleteAccountPopoverButton{
+      margin-left: calc((100% - 250px) / 2);
+      margin-top: 15px;
+    }
+
+    .deleteMessage{
+      width: 100%;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
     .settingsContainer {
       box-sizing: border-box;
       height: 490px;
