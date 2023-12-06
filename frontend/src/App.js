@@ -8,6 +8,7 @@ import { LandingPage } from './pages/Landingpage';
 import SettingsPage from "./pages/Settingspage";
 import ForgotPassword from "./pages/ForgotPassword"
 import WorkoutsPage from "./pages/WorkoutsPage";
+import CalendarPage from "./pages/CalendarPage";
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/exercise" element={<WorkoutsPage />}/>
+                <Route path="/calendar" element={<CalendarPage />} />
             </Routes>
         </BrowserRouter>
     );

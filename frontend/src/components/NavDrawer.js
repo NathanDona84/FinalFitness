@@ -148,6 +148,8 @@ export default function NavDrawer(props) {
                     window.location.href = "/nutrition";
                   if(index == 1)
                     window.location.href = "/exercise";
+                  if(index == 2)
+                    window.location.href = "/calendar";
                 }}
               >
                 <ListItemButton

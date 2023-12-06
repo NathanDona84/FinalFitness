@@ -670,6 +670,43 @@ app.post('/api/deleteWorkoutsItem', async (req, res, next) => {
 });
 
 
+app.post('/api/fetchConsumedNoDate', async (req, res, next) => {
+    const { userId, accessToken } = req.body;
+    let error = "";
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try {
+            const db = client.db("FinalFitness");
+            let temp = await db.collection('consumed').find({"userId": userId}).toArray();
+            if(temp.length == 0){
+                error = 'could not find consumed object';
+            }
+            else{
+                temp = temp[0];
+                ret["info"] = temp;
+            }
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+
 app.listen(PORT, () =>{
     console.log('Server listening on port ' + PORT);
 });
