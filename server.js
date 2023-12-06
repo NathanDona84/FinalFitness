@@ -33,6 +33,9 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/exercise', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/calendar', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;
