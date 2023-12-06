@@ -7,6 +7,7 @@ import NutritionPage from './pages/NutritionPage';
 import { LandingPage } from './pages/Landingpage';
 import SettingsPage from "./pages/Settingspage";
 import ForgotPassword from "./pages/ForgotPassword"
+import WorkoutsPage from "./pages/WorkoutsPage";
 
 export function buildPath(route){
     if(process.env.NODE_ENV == 'production')
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/nutrition" element={<NutritionPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/forgot_password" element={<ForgotPassword />} />
+                <Route path="/exercise" element={<WorkoutsPage />}/>
             </Routes>
         </BrowserRouter>
     );

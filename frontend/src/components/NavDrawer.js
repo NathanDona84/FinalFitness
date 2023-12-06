@@ -146,6 +146,8 @@ export default function NavDrawer(props) {
                 onClick={()=>{
                   if(index == 0)
                     window.location.href = "/nutrition";
+                  if(index == 1)
+                    window.location.href = "/exercise";
                 }}
               >
                 <ListItemButton

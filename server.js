@@ -30,6 +30,9 @@ if (process.env.NODE_ENV === 'production'){
     app.get('/forgot_password', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
+    app.get('/exercise', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
 }
 
 const MongoClient = require('mongodb').MongoClient;
@@ -508,6 +511,161 @@ app.post('/api/fetchUser', async (req, res, next) => {
 
     ret["info"] = info;
     ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+
+app.post('/api/fetchWorkouts', async (req, res, next) => {
+    const { userId, date, accessToken } = req.body;
+    let error = "";
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try {
+            const db = client.db("FinalFitness");
+            let temp = await db.collection('workouts').find({"userId": userId}).toArray();
+            if(temp.length == 0){
+                error = 'could not find consumed object';
+            }
+            else{
+                temp = temp[0];
+                if(!Object.keys(temp["dates"]).includes(date)){
+                    temp["dates"][date]=[];
+                    await db.collection("workouts").updateOne(
+                        {"userId": userId},
+                        {$set: {"dates": temp["dates"]}}
+                    )
+                }
+                ret["info"] = temp;
+            }
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    res.status(200).json(ret);
+});
+
+app.post('/api/addWorkoutsItem', async (req, res, next) => {
+    const { userId, date, item, accessToken } = req.body;
+    let field = "dates."+date;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("workouts").updateOne(
+                {"userId": userId},
+                {$push: {[field]: item}}
+            )
+            info = await db.collection("workouts").find({"userId": userId}).toArray();
+            info = info[0];
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    ret["info"] = info;
+    res.status(200).json(ret);
+});
+
+app.post('/api/updateWorkoutsItem', async (req, res, next) => {
+    const { userId, date, item, accessToken } = req.body;
+    let field = "dates."+date;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("workouts").updateOne(
+                {"userId": userId},
+                {$set: {[field]: item}}
+            )
+            info = await db.collection("workouts").find({"userId": userId}).toArray();
+            info = info[0];
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    ret["info"] = info;
+    res.status(200).json(ret);
+});
+
+app.post('/api/deleteWorkoutsItem', async (req, res, next) => {
+    const { userId, date, item, accessToken } = req.body;
+    let field = "dates."+date;
+    let error = "";
+    let info = {};
+    let ret = {};
+
+    if(token.isExpired(accessToken)){
+        error = "token is expired";
+    }
+    else{
+        try{
+            const db = client.db("FinalFitness");
+            await db.collection("workouts").updateOne(
+                {"userId": userId},
+                {$set: {[field]: item}}
+            )
+            info = await db.collection("workouts").find({"userId": userId}).toArray();
+            info = info[0];
+        }
+        catch(e){
+            error = e.toString();
+        }
+
+        try{
+            ret["token"] = token.refresh(accessToken);
+        }
+        catch(e){
+            error = e.toString();
+        }
+    }
+
+    ret["error"] = error;
+    ret["info"] = info;
     res.status(200).json(ret);
 });
 
