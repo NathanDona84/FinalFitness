@@ -215,7 +215,7 @@ export default function CalendarPage(props){
             }
             setBoxes(displayBoxes);
         }
-    }, [date, consumed]);
+    }, [date, consumed, tracked]);
 
 
 
